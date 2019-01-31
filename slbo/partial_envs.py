@@ -26,7 +26,7 @@ def make_env(id: str, task_config=None):
     if id in envs:
         env = envs[id]()
     elif id in task_envs:
-        env = envs[id](task_config=task_config)
+        env = task_envs[id](task_config=task_config)
     else:
         raise Exception(f"env {id} not recognized")
         
