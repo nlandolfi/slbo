@@ -7,6 +7,7 @@ from slbo.envs.mujoco.ant_env import AntEnv
 from slbo.envs.mujoco.hopper_env import HopperEnv
 from slbo.envs.mujoco.swimmer_env import SwimmerEnv
 from slbo.envs.mujoco.half_cheetah_task_env import HalfCheetahTaskEnv
+from slbo.envs.mujoco.swimmer_task_env import SwimmerTaskEnv
 
 
 def make_env(id: str, task_config=None):
@@ -18,6 +19,7 @@ def make_env(id: str, task_config=None):
         'Hopper-v2': HopperEnv,
         'Swimmer-v2': SwimmerEnv,
         'HalfCheetahTask-v2': HalfCheetahTaskEnv,
+        'SwimmerTask-v2': SwimmerTaskEnv,
     }
     env = envs[id](task_config=task_config)
     if not hasattr(env, 'reward_range'):

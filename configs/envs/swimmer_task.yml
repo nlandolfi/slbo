@@ -1,0 +1,6 @@
+# Copy of swimmer.yml
+# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+env:
+  id: SwimmerTask-v2
+runner:
+  max_steps: 500
