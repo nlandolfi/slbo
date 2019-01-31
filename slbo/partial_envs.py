@@ -21,7 +21,14 @@ def make_env(id: str, task_config=None):
         'HalfCheetahTask-v2': HalfCheetahTaskEnv,
         'SwimmerTask-v2': SwimmerTaskEnv,
     }
-    env = envs[id](task_config=task_config)
+    task_envs = {
+        'HalfCheetaTask-v2': True,
+        'SwimmerTask-v2': True,
+    }
+    if id in task_envs:
+        env = envs[id](task_config=task_config)
+    else:
+        env = envs[id]()
     if not hasattr(env, 'reward_range'):
         env.reward_range = (-np.inf, np.inf)
     if not hasattr(env, 'metadata'):
