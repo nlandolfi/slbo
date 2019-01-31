@@ -18,13 +18,11 @@ def make_env(id: str, task_config=None):
         'Ant-v2': AntEnv,
         'Hopper-v2': HopperEnv,
         'Swimmer-v2': SwimmerEnv,
-
     }
     task_envs = {
         'HalfCheetahTask-v2': HalfCheetahTaskEnv,
         'SwimmerTask-v2': SwimmerTaskEnv,
     }
-    
     if id in envs:
         env = envs[id]()
     elif id in task_envs:

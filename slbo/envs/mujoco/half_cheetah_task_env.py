@@ -1,4 +1,4 @@
-# Copy of half_cheetah_env.py, with different mb_step.
+# Copy of half_cheetah_env.py with different mb_step.
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 import numpy as np
 from rllab.envs.mujoco import half_cheetah_task_env

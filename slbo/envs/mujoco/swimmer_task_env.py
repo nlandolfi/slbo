@@ -18,6 +18,6 @@ class SwimmerTaskEnv(swimmer_task_env.SwimmerTaskEnv, BaseModelBasedEnv):
         lb, ub = self.action_bounds
         scaling = (ub - lb) * 0.5
         ctrl_cost = 0.5 * self.ctrl_cost_coeff * np.sum(np.square(actions / scaling), axis=-1)
-        forward_reward = -1. * np.abs(next_states[:, -3] - self._task_config.goal_velocity)
+        forward_reward = -1.5 * np.abs(next_states[:, -3] - self._task_config.goal_velocity)
         reward = forward_reward - ctrl_cost
         return reward, np.zeros_like(reward, dtype=np.bool)
