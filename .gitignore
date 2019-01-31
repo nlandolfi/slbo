@@ -1,2 +1,3 @@
 slboenv/
 __pycache__/
+*.pyc
