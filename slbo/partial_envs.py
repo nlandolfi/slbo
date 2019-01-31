@@ -18,17 +18,20 @@ def make_env(id: str, task_config=None):
         'Ant-v2': AntEnv,
         'Hopper-v2': HopperEnv,
         'Swimmer-v2': SwimmerEnv,
+
+    }
+    task_envs = {
         'HalfCheetahTask-v2': HalfCheetahTaskEnv,
         'SwimmerTask-v2': SwimmerTaskEnv,
     }
-    task_envs = {
-        'HalfCheetaTask-v2': True,
-        'SwimmerTask-v2': True,
-    }
-    if id in task_envs:
+    
+    if id in envs:
+        env = envs[id]()
+    elif id in task_envs:
         env = envs[id](task_config=task_config)
     else:
-        env = envs[id]()
+        raise Exception(f"env {id} not recognized")
+        
     if not hasattr(env, 'reward_range'):
         env.reward_range = (-np.inf, np.inf)
     if not hasattr(env, 'metadata'):

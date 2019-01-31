@@ -1,4 +1,4 @@
-# Copy of half_cheetah_env.yml
+# Copy of half_cheetah.yml
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 env:
   id: HalfCheetahTask-v2
