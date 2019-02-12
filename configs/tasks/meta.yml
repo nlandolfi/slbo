@@ -1,0 +1,8 @@
+task:
+  n_iters: 5
+  method: 'random'
+warmup:
+  n_iters: 5 # or 20?
+  n_policy_iters: 10
+  n_model_iters: 100
+  n_evaluate_iters: 1

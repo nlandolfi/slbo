@@ -16,6 +16,17 @@ class FLAGS(BaseFLAGS):
     run_id: str = None
     algorithm = 'OLBO'  # possible options: OLBO, baseline, MF
 
+    class task(BaseFLAGS):
+        n_iters = 5
+        method = 'random' # possibly 'random' or 'fixed'
+        fixed_velocity = None
+
+    class warmup(BaseFLAGS):
+        n_iters = 0
+        n_policy_iters = 20
+        n_model_iters = 100
+        n_evaluate_iters = 10
+
     class slbo(BaseFLAGS):
         n_iters = 20
         n_policy_iters = 10
