@@ -109,13 +109,14 @@ def main():
     max_ent_coef = FLAGS.TRPO.ent_coef
 
     for TASK_NUM in range(FLAGS.task.n_iters):
-        logger.info('Task Sampled: %s', task)
-
         logger.info("### STARTING TASK %d ###", TASK_NUM)
         if FLAGS.task.method == 'random':
             task.sample()
+            logger.info('Task Sampled: %s', task)
         elif FLAGS.task.method == 'fixed':
             task.goal_velocity = FLAGS.task.fixed_velocity
+            logger.info('Task Fixed: %s', task)
+
 
         evaluate(settings, 'pre-warm-up')
 
