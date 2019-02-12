@@ -41,7 +41,7 @@ def add_multi_step(src: Dataset, dst: Dataset):
 
 def make_real_runner(n_envs, task_config=None):
     from slbo.envs.batched_env import BatchedEnv
-    batched_env = BatchedEnv([make_env(FLAGS.env.id, task_config=task) for _ in range(n_envs)])
+    batched_env = BatchedEnv([make_env(FLAGS.env.id, task_config=task_config) for _ in range(n_envs)])
     return Runner(batched_env, rescale_action=True, **FLAGS.runner.as_dict())
 
 
