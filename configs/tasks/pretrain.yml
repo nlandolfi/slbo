@@ -2,4 +2,4 @@
 task:
   n_iters: 1
   method: 'fixed'
-  fixed_velocity: 1.0s
+  fixed_velocity: 1.0
