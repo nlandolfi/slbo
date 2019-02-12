@@ -4,6 +4,7 @@ import numpy as np
 from rllab.envs.mujoco import swimmer_task_env
 from slbo.envs import BaseModelBasedEnv
 
+SwimmerTaskConfig = swimmer_task_env.SwimmerTaskConfig
 
 class SwimmerTaskEnv(swimmer_task_env.SwimmerTaskEnv, BaseModelBasedEnv):
     def get_current_obs(self):

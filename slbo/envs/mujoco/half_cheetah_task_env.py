@@ -4,6 +4,7 @@ import numpy as np
 from rllab.envs.mujoco import half_cheetah_task_env
 from slbo.envs import BaseModelBasedEnv
 
+HalfCheetahTaskConfig = half_cheetah_task_env.HalfCheetahTaskConfig
 
 class HalfCheetahTaskEnv(half_cheetah_task_env.HalfCheetahTaskEnv, BaseModelBasedEnv):
     def get_current_obs(self):
