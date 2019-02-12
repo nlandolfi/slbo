@@ -39,9 +39,9 @@ def add_multi_step(src: Dataset, dst: Dataset):
     dst.extend(ending)
 
 
-def make_real_runner(n_envs):
+def make_real_runner(n_envs, task_config=None):
     from slbo.envs.batched_env import BatchedEnv
-    batched_env = BatchedEnv([make_env(FLAGS.env.id) for _ in range(n_envs)])
+    batched_env = BatchedEnv([make_env(FLAGS.env.id, task_config=task) for _ in range(n_envs)])
     return Runner(batched_env, rescale_action=True, **FLAGS.runner.as_dict())
 
 
@@ -50,7 +50,7 @@ def main():
     FLAGS.freeze()
 
     task = make_task(FLAGS.env.id)
-    env = make_env(FLAGS.env.id)
+    env = make_env(FLAGS.env.id, task_config=task)
     dim_state = int(np.prod(env.observation_space.shape))
     dim_action = int(np.prod(env.action_space.shape))
 
@@ -68,7 +68,7 @@ def main():
     vfn = MLPVFunction(dim_state, [64, 64], normalizers.state)
     model = DynamicsModel(dim_state, dim_action, normalizers, FLAGS.model.hidden_sizes)
 
-    virt_env = VirtualEnv(model, make_env(FLAGS.env.id), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
+    virt_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
     virt_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
 
     criterion_map = {
@@ -84,10 +84,10 @@ def main():
     tf.get_default_session().run(tf.global_variables_initializer())
 
     runners = {
-        'test': make_real_runner(4),
-        'collect': make_real_runner(1),
-        'dev': make_real_runner(1),
-        'train': make_real_runner(FLAGS.plan.n_envs) if FLAGS.algorithm == 'MF' else virt_runner,
+        'test': make_real_runner(4, task_config=task),
+        'collect': make_real_runner(1, task_config=task),
+        'dev': make_real_runner(1, task_config=task),
+        'train': make_real_runner(FLAGS.plan.n_envs, task_config=task) if FLAGS.algorithm == 'MF' else virt_runner,
     }
     settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
 
