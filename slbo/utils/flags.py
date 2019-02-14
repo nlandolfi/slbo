@@ -26,6 +26,7 @@ class FLAGS(BaseFLAGS):
         n_policy_iters = 20
         n_model_iters = 100
         n_evaluate_iters = 10
+        start = 'reset' # possibly 'buffer'
 
     class slbo(BaseFLAGS):
         n_iters = 20
