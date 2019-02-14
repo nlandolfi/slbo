@@ -1,6 +1,7 @@
 task:
   n_iters: 1
   method: 'fixed'
+  fixed_velocity: 1.9
 slbo:
     n_iters: 0
 warmup:
