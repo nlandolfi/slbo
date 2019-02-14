@@ -3,3 +3,5 @@ task:
   n_iters: 1
   method: 'fixed'
   fixed_velocity: 1.0
+slbo:
+  n_save_stages: 1
