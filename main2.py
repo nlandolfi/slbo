@@ -116,7 +116,7 @@ def main():
             logger.info('Task Fixed: %s', task)
 
         logger.info("Creating a new policy! The saver will still save the old one.")
-        policy = GaussianMLPPolicy(dim_state, dim_action, normalizer=normalizers.state, **FLAGS.policy.as_dict())
+        policy = policy.clone()
         logger.info(policy)
         algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
         settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
