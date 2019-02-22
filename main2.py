@@ -117,6 +117,8 @@ def main():
             task.goal_velocity = FLAGS.task.fixed_velocity
             logger.info('Task Fixed: %s', task)
 
+        logger.info("Creating a new policy! The saver will still save the old one.")
+        policy = GaussianMLPPolicy(dim_state, dim_action, normalizer=normalizers.state, **FLAGS.policy.as_dict())
 
         evaluate(settings, 'pre-warm-up')
 
