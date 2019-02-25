@@ -117,6 +117,7 @@ def main():
 
         logger.info("Creating a new policy! The saver will still save the old one.")
         policy = policy.clone()
+        vfn = MLPVFunction(dim_state, [64, 64], normalizers.state)
         algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
         settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
         tf.get_default_session().run(tf.global_variables_initializer())
