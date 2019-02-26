@@ -20,6 +20,7 @@ class FLAGS(BaseFLAGS):
         n_iters = 5
         method = 'random' # possibly 'random' or 'fixed'
         fixed_velocity = None
+        reset_policy = False
 
     class warmup(BaseFLAGS):
         n_iters = 0

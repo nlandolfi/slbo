@@ -2,7 +2,7 @@ task:
   n_iters: 1
   method: 'fixed'
 slbo:
-    n_iters: 0
+    n_iters: 40
 warmup:
   n_iters: 80
   n_policy_iters: 40

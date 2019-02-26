@@ -79,6 +79,7 @@ def main():
     criterion = criterion_map[FLAGS.model.loss]
     loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
     loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
+    algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
 
     tf.get_default_session().run(tf.global_variables_initializer())
 
@@ -88,6 +89,7 @@ def main():
         'dev': make_real_runner(1, task_config=task),
         'train': make_real_runner(FLAGS.plan.n_envs, task_config=task) if FLAGS.algorithm == 'MF' else virt_runner,
     }
+    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
 
     saver = nn.ModuleDict({'policy': policy, 'model': model, 'vfn': vfn})
     print(saver)
@@ -115,12 +117,13 @@ def main():
             task.goal_velocity = FLAGS.task.fixed_velocity
             logger.info('Task Fixed: %s', task)
 
-        logger.info("Creating a new policy! The saver will still save the old one.")
-        policy = policy.clone()
-        vfn = MLPVFunction(dim_state, [64, 64], normalizers.state)
-        algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
-        settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
-        tf.get_default_session().run(tf.global_variables_initializer())
+        if FLAGS.task.reset_policy:
+            logger.info("Creating a new policy! The saver will still save the old one.")
+            policy = policy.clone()
+            vfn = MLPVFunction(dim_state, [64, 64], normalizers.state)
+            algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
+            settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
+            tf.get_default_session().run(tf.global_variables_initializer())
 
         evaluate(settings, 'pre-warm-up')
 

@@ -1,11 +1,2 @@
 task:
-  n_iters: 1
-  method: 'fixed'
   fixed_velocity: 1.5
-slbo:
-    n_iters: 0
-warmup:
-  n_iters: 80
-  n_policy_iters: 40
-  n_model_iters: 100
-  n_evaluate_iters: 1
