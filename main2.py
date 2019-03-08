@@ -67,9 +67,13 @@ def main():
     noise = OUNoise(env.action_space, theta=FLAGS.OUNoise.theta, sigma=FLAGS.OUNoise.sigma, shape=(1, dim_action))
     vfn = MLPVFunction(dim_state, [64, 64], normalizers.state)
     model = DynamicsModel(dim_state, dim_action, normalizers, FLAGS.model.hidden_sizes)
+    shadow_model = DynamicsModel(dim_state, dim_action, normalizers, FLAGS.model.hidden_sizes)
 
     virt_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
     virt_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
+
+    shadown_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task, FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model))
+    shadown_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
 
     criterion_map = {
         'L1': nn.L1Loss(),
@@ -79,17 +83,22 @@ def main():
     criterion = criterion_map[FLAGS.model.loss]
     loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
     loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
+    shadow_loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
+    shadow_loss_model.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
     algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
 
     tf.get_default_session().run(tf.global_variables_initializer())
+
+    assert FLAGS.algorithm != 'MF', "don't support model free for now"
 
     runners = {
         'test': make_real_runner(4, task_config=task),
         'collect': make_real_runner(1, task_config=task),
         'dev': make_real_runner(1, task_config=task),
         'train': make_real_runner(FLAGS.plan.n_envs, task_config=task) if FLAGS.algorithm == 'MF' else virt_runner,
+        'shadow': shadow_runner,
     }
-    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
+    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env'), (runners['shadown'], 'Shadow Env')]
 
     saver = nn.ModuleDict({'policy': policy, 'model': model, 'vfn': vfn})
     print(saver)
@@ -155,6 +164,21 @@ def main():
                     logger.info('nan! %s %s', np.isnan(loss), np.isnan(np.mean(losses)))
                 logger.info('# Iter %3d: Loss = [train = %.3f, dev = %.3f], after %d steps, grad_norm = %.6f',
                             i, np.mean(losses), loss, n_model_iters, grad_norm_meter.get())
+
+            losses = deque(maxlen=FLAGS.warmup.n_model_iters)
+            grad_norm_meter = AverageMeter()
+            n_model_iters = FLAGS.warmup.n_model_iters
+            for _ in range(n_model_iters):
+                samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
+                _, train_loss, grad_norm = shadow_loss_mod.get_loss(
+                    samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
+                    fetch='train loss grad_norm')
+                losses.append(train_loss.mean())
+                grad_norm_meter.update(grad_norm)
+                # ideally, we should define an Optimizer class, which takes parameters as inputs.
+                # The `update` method of `Optimizer` will invalidate all parameters during updates.
+                for param in shadow_model.parameters():
+                    param.invalidate()
 
             for n_updates in range(FLAGS.warmup.n_policy_iters):
                 if FLAGS.algorithm != 'MF' and FLAGS.warmup.start == 'buffer':
