@@ -84,7 +84,7 @@ def main():
     loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
     loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
     shadow_loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
-    shadow_loss_model.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
+    shadow_loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
     algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
 
     tf.get_default_session().run(tf.global_variables_initializer())
