@@ -72,7 +72,7 @@ def main():
     virt_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
     virt_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
 
-    shadown_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task, FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model))
+    shadown_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
     shadown_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
 
     criterion_map = {
