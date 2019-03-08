@@ -83,7 +83,7 @@ def main():
     criterion = criterion_map[FLAGS.model.loss]
     loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
     loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
-    shadow_loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
+    shadow_loss_mod = MultiStepLoss(shadow_model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
     shadow_loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
     algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
 
