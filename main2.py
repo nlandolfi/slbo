@@ -98,7 +98,7 @@ def main():
         'train': make_real_runner(FLAGS.plan.n_envs, task_config=task) if FLAGS.algorithm == 'MF' else virt_runner,
         'shadow': shadow_runner,
     }
-    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env'), (runners['shadow'], 'Shadow Env')]
+    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env'), (runners['shadow'], policy, 'Shadow Env')]
 
     saver = nn.ModuleDict({'policy': policy, 'model': model, 'vfn': vfn})
     print(saver)
