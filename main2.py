@@ -100,7 +100,7 @@ def main():
     }
     settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
     for (i, runner) in enumerate(shadow_runners):
-        settings.append((runners[f'shadow-{i}'], policy, f'Shadow Env-{i}'))
+        settings.append((runner, policy, f'Shadow Env-{i}'))
 
     saver = nn.ModuleDict({'policy': policy, 'model': model, 'vfn': vfn})
     print(saver)
