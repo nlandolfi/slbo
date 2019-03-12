@@ -26,8 +26,10 @@ class FLAGS(BaseFLAGS):
         n_iters = 0
         n_policy_iters = 20
         n_model_iters = 100
-        n_evaluate_iters = 10
+        n_evaluate_iters = 1
         start = 'reset' # possibly 'buffer'
+        n_shadow_models = 1
+        n_shadow_model_iters = 100
 
     class slbo(BaseFLAGS):
         n_iters = 20

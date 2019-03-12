@@ -67,13 +67,13 @@ def main():
     noise = OUNoise(env.action_space, theta=FLAGS.OUNoise.theta, sigma=FLAGS.OUNoise.sigma, shape=(1, dim_action))
     vfn = MLPVFunction(dim_state, [64, 64], normalizers.state)
     model = DynamicsModel(dim_state, dim_action, normalizers, FLAGS.model.hidden_sizes)
-    shadow_model = DynamicsModel(dim_state, dim_action, normalizers, FLAGS.model.hidden_sizes)
+    shadow_models = [DynamicsModel(dim_state, dim_action, normalizers, FLAGS.model.hidden_sizes) for n in range(FLAGS.warmup.n_shadow_models)]
 
     virt_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
     virt_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
 
-    shadow_env = VirtualEnv(shadow_model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
-    shadow_runner = Runner(shadow_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
+    shadow_envs = [VirtualEnv(shadow_model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model) for n in range(FLAGS.warmup.n_shadow_models)]
+    shadow_runners = [Runner(shadow_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps}) for n in range(FLAGS.warmup.n_shadow_models)]
 
     criterion_map = {
         'L1': nn.L1Loss(),
@@ -83,8 +83,9 @@ def main():
     criterion = criterion_map[FLAGS.model.loss]
     loss_mod = MultiStepLoss(model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
     loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
-    shadow_loss_mod = MultiStepLoss(shadow_model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step)
-    shadow_loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay)
+    shadow_loss_mods = [MultiStepLoss(shadow_model, normalizers, dim_state, dim_action, criterion, FLAGS.model.multi_step) for n in range(FLAGS.warmup.n_shadow_models)]
+    for shadow_loss_mod in shadow_loss_mods:
+        shadow_loss_mod.build_backward(FLAGS.model.lr, FLAGS.model.weight_decay
     algo = TRPO(vfn=vfn, policy=policy, dim_state=dim_state, dim_action=dim_action, **FLAGS.TRPO.as_dict())
 
     tf.get_default_session().run(tf.global_variables_initializer())
@@ -96,9 +97,10 @@ def main():
         'collect': make_real_runner(1, task_config=task),
         'dev': make_real_runner(1, task_config=task),
         'train': make_real_runner(FLAGS.plan.n_envs, task_config=task) if FLAGS.algorithm == 'MF' else virt_runner,
-        'shadow': shadow_runner,
     }
-    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env'), (runners['shadow'], policy, 'Shadow Env')]
+    settings = [(runners['test'], policy, 'Real Env'), (runners['train'], policy, 'Virt Env')]
+    for (i, runner) in enumerate(shadow_runners):
+        settings.append((runners[f'shadow-{i}'], policy, f'Shadow Env-{i}'))
 
     saver = nn.ModuleDict({'policy': policy, 'model': model, 'vfn': vfn})
     print(saver)
@@ -116,6 +118,22 @@ def main():
         logger.warning('Loading %d samples from %s', n_samples, FLAGS.ckpt.buf_load)
 
     max_ent_coef = FLAGS.TRPO.ent_coef
+
+    for (model, loss_mod) in zip(shadow_models, shadow_loss_mods):
+        losses = deque(maxlen=FLAGS.warmup.n_shadow_model_iters)
+        grad_norm_meter = AverageMeter()
+        n_model_iters = FLAGS.warmup.n_shadow_model_iters
+        for _ in range(n_model_iters):
+            samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
+            _, train_loss, grad_norm = loss_mod.get_loss(
+                samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
+                fetch='train loss grad_norm')
+            losses.append(train_loss.mean())
+            grad_norm_meter.update(grad_norm)
+            # ideally, we should define an Optimizer class, which takes parameters as inputs.
+            # The `update` method of `Optimizer` will invalidate all parameters during updates.
+            for param in model.parameters():
+                param.invalidate()
 
     for TASK_NUM in range(FLAGS.task.n_iters):
         logger.info("### STARTING TASK %d ###", TASK_NUM)
