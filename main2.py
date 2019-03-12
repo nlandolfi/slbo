@@ -72,8 +72,8 @@ def main():
     virt_env = VirtualEnv(model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model)
     virt_runner = Runner(virt_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps})
 
-    shadow_envs = [VirtualEnv(shadow_model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model) for n in range(FLAGS.warmup.n_shadow_models)]
-    shadow_runners = [Runner(shadow_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps}) for n in range(FLAGS.warmup.n_shadow_models)]
+    shadow_envs = [VirtualEnv(shadow_model, make_env(FLAGS.env.id, task_config=task), FLAGS.plan.n_envs, opt_model=FLAGS.slbo.opt_model) for shadow_model in shadow_models]
+    shadow_runners = [Runner(shadow_env, **{**FLAGS.runner.as_dict(), 'max_steps': FLAGS.plan.max_steps}) for shadow_env in shadow_envs]
 
     criterion_map = {
         'L1': nn.L1Loss(),
@@ -183,20 +183,20 @@ def main():
                 logger.info('# Iter %3d: Loss = [train = %.3f, dev = %.3f], after %d steps, grad_norm = %.6f',
                             i, np.mean(losses), loss, n_model_iters, grad_norm_meter.get())
 
-            losses = deque(maxlen=FLAGS.warmup.n_model_iters)
-            grad_norm_meter = AverageMeter()
-            n_model_iters = FLAGS.warmup.n_model_iters
-            for _ in range(n_model_iters):
-                samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
-                _, train_loss, grad_norm = shadow_loss_mod.get_loss(
-                    samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
-                    fetch='train loss grad_norm')
-                losses.append(train_loss.mean())
-                grad_norm_meter.update(grad_norm)
-                # ideally, we should define an Optimizer class, which takes parameters as inputs.
-                # The `update` method of `Optimizer` will invalidate all parameters during updates.
-                for param in shadow_model.parameters():
-                    param.invalidate()
+            # losses = deque(maxlen=FLAGS.warmup.n_model_iters)
+            # grad_norm_meter = AverageMeter()
+            # n_model_iters = FLAGS.warmup.n_model_iters
+            # for _ in range(n_model_iters):
+            #     samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
+            #     _, train_loss, grad_norm = shadow_loss_mod.get_loss(
+            #         samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
+            #         fetch='train loss grad_norm')
+            #     losses.append(train_loss.mean())
+            #     grad_norm_meter.update(grad_norm)
+            #     # ideally, we should define an Optimizer class, which takes parameters as inputs.
+            #     # The `update` method of `Optimizer` will invalidate all parameters during updates.
+            #     for param in shadow_model.parameters():
+            #         param.invalidate()
 
             for n_updates in range(FLAGS.warmup.n_policy_iters):
                 if FLAGS.algorithm != 'MF' and FLAGS.warmup.start == 'buffer':
