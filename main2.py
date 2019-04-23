@@ -151,6 +151,9 @@ def main():
         evaluate(settings, 'pre-warm-up')
 
         for i in range(FLAGS.warmup.n_iters):
+            if TASK_NUM == 0:
+                break
+                
             if i % FLAGS.warmup.n_evaluate_iters == 0 and i != 0:
                 # cur_actions = policy.eval('actions_mean actions_std', states=recent_states)
                 # kl_old_new = gaussian_kl(*ref_actions, *cur_actions).sum(axis=1).mean()
