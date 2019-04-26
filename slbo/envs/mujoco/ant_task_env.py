@@ -1,4 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+import math
 import numpy as np
 from rllab.envs.mujoco import ant_task_env
 from rllab.envs.base import Step
