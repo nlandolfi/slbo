@@ -19,8 +19,9 @@ class FLAGS(BaseFLAGS):
     class task(BaseFLAGS):
         n_iters = 5
         method = 'random' # possibly 'random' or 'fixed'
-        fixed_velocity = None
-        reset_policy = False
+        fixed_velocities = []
+        reset_policy = True
+
 
     class warmup(BaseFLAGS):
         n_iters = 0

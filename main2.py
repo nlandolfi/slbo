@@ -141,10 +141,12 @@ def main():
             task.sample()
             logger.info('Task Sampled: %s', task)
         elif FLAGS.task.method == 'fixed':
-            task.goal_velocity = FLAGS.task.fixed_velocity
+            assert len(FLAGS.task.fixed_velocities) == FLAGS.task.n_iters
+            task.goal_velocity = FLAGS.task.fixed_velocities[TASK_NUM]
             logger.info('Task Fixed: %s', task)
 
         if FLAGS.task.reset_policy:
+            print("Resetting Policy")
             print(policy.parameters())
             tf.get_default_session().run(tf.variables_initializer(policy.parameters()))
 

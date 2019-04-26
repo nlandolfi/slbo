@@ -1,7 +1,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+# Use with one of v<VELOCITY>.yml files.
 task:
   n_iters: 1
   method: 'fixed'
-  fixed_velocity: 1.0
 ckpt:
   n_save_stages: 1

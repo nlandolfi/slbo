@@ -6,6 +6,7 @@ from slbo.envs.mujoco.humanoid_env import HumanoidEnv
 from slbo.envs.mujoco.ant_env import AntEnv
 from slbo.envs.mujoco.hopper_env import HopperEnv
 from slbo.envs.mujoco.swimmer_env import SwimmerEnv
+from slbo.envs.mujoco.ant_task_env import AntTaskEnv, AntTaskConfig
 from slbo.envs.mujoco.half_cheetah_task_env import HalfCheetahTaskEnv, HalfCheetahTaskConfig
 from slbo.envs.mujoco.swimmer_task_env import SwimmerTaskEnv, SwimmerTaskConfig
 
@@ -18,10 +19,12 @@ envs = {
     'Swimmer-v2': SwimmerEnv,
 }
 task_envs = {
+    'AntTask-v2': AntTaskEnv,
     'HalfCheetahTask-v2': HalfCheetahTaskEnv,
     'SwimmerTask-v2': SwimmerTaskEnv,
 }
 task_configs = {
+    'AntTask-v2': AntTaskConfig,
     'HalfCheetahTask-v2': HalfCheetahTaskConfig,
     'SwimmerTask-v2': SwimmerTaskConfig,
 }

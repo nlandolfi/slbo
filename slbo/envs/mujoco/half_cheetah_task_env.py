@@ -18,5 +18,10 @@ class HalfCheetahTaskEnv(half_cheetah_task_env.HalfCheetahTaskEnv, BaseModelBase
     def mb_step(self, states, actions, next_states):
         actions = np.clip(actions, *self.action_bounds)
         reward_ctrl = -0.05 * np.sum(np.square(actions), axis=-1)
-        reward_fwd = -1. * np.abs(next_states[..., 21] - self._task_config.goal_velocity)
+        if self._task_config.goal_velocity == -math.inf:
+            reward_fwd = -1 * next_states[..., 21]
+        elif self._task_config.goal_velocity == math.inf:
+            reward_fwd = next_states[..., 21]
+        else:
+            reward_fwd = -1. * np.abs(next_states[..., 21] - self._task_config.goal_velocity)
         return reward_ctrl + reward_fwd, np.zeros_like(reward_fwd, dtype=np.bool)

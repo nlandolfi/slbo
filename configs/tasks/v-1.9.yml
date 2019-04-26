@@ -1,2 +1,2 @@
 task:
-  fixed_velocity: -1.9
+  fixed_velocities: [-1.9]

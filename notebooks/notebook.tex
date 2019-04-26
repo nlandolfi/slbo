@@ -1,0 +1,867 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{Warm-ups Yes Reset}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{from} \PY{n+nn}{utils} \PY{k}{import} \PY{o}{*}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{velocities} \PY{o}{=} \PY{p}{\PYZob{}}
+            \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{539481}\PY{p}{,} \PY{l+m+mi}{565638}\PY{p}{,} \PY{l+m+mi}{565653}\PY{p}{]}\PY{p}{,}
+            \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{539480}\PY{p}{,} \PY{l+m+mi}{565640}\PY{p}{,} \PY{l+m+mi}{565654}\PY{p}{]}\PY{p}{,}
+            \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.1}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{539468}\PY{p}{,} \PY{l+m+mi}{565641}\PY{p}{,} \PY{l+m+mi}{565655}\PY{p}{]}\PY{p}{,}
+            \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.9}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{539461}\PY{p}{,} \PY{l+m+mi}{565642}\PY{p}{,} \PY{l+m+mi}{565656}\PY{p}{]}\PY{p}{,}
+            \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.5}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{539460}\PY{p}{,} \PY{l+m+mi}{565643}\PY{p}{,} \PY{l+m+mi}{565657}\PY{p}{]}\PY{p}{,}
+            \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.1}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{539427}\PY{p}{,} \PY{l+m+mi}{565644}\PY{p}{,} \PY{l+m+mi}{565658}\PY{p}{]}\PY{p}{,}
+            \PY{l+m+mf}{0.1}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{536383}\PY{p}{,} \PY{l+m+mi}{565645}\PY{p}{,} \PY{l+m+mi}{565660}\PY{p}{]}\PY{p}{,}
+            \PY{l+m+mf}{0.5}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{536384}\PY{p}{,} \PY{l+m+mi}{565646}\PY{p}{,} \PY{l+m+mi}{565661}\PY{p}{]}\PY{p}{,}
+            \PY{l+m+mf}{0.9}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{536385}\PY{p}{,} \PY{l+m+mi}{565647}\PY{p}{,} \PY{l+m+mi}{565662}\PY{p}{]}\PY{p}{,}
+            \PY{l+m+mf}{1.1}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{536386}\PY{p}{,} \PY{l+m+mi}{565648}\PY{p}{,} \PY{l+m+mi}{565663}\PY{p}{]}\PY{p}{,}
+            \PY{l+m+mf}{1.5}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{536387}\PY{p}{,} \PY{l+m+mi}{565649}\PY{p}{,} \PY{l+m+mi}{565664}\PY{p}{]}\PY{p}{,}
+            \PY{l+m+mf}{1.9}\PY{p}{:} \PY{p}{[}\PY{l+m+mi}{536388}\PY{p}{,} \PY{l+m+mi}{565652}\PY{p}{,} \PY{l+m+mi}{565665}\PY{p}{]}\PY{p}{,}
+        \PY{p}{\PYZcb{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{c+c1}{\PYZsh{} buffer}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{k+kn}{import} \PY{n+nn}{os}
+        
+        \PY{n}{remotepaths} \PY{o}{=}\PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{n}{job}\PY{p}{:} \PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/tiger/u/lando/cmeta/v}\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{/}\PY{l+s+si}{\PYZob{}job\PYZcb{}}\PY{l+s+s2}{/log.json}\PY{l+s+s2}{\PYZdq{}} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{jobs}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{p}{(}\PY{n}{vel}\PY{p}{,} \PY{n}{jobs}\PY{p}{)} \PY{o+ow}{in} \PY{n}{velocities}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{\PYZcb{}}
+        \PY{n}{localpaths} \PY{o}{=}\PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{n}{job}\PY{p}{:} \PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/tmp/log}\PY{l+s+si}{\PYZob{}job\PYZcb{}}\PY{l+s+s2}{.json}\PY{l+s+s2}{\PYZdq{}} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{jobs}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{p}{(}\PY{n}{vel}\PY{p}{,} \PY{n}{jobs}\PY{p}{)} \PY{o+ow}{in} \PY{n}{velocities}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{\PYZcb{}}
+        
+        \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{:}
+            \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{:}
+                \PY{n}{remote} \PY{o}{=} \PY{n}{remotepaths}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}
+                \PY{n}{local} \PY{o}{=} \PY{n}{localpaths}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}
+                \PY{n}{command} \PY{o}{=} \PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scp lando@sc.stanford.edu:}\PY{l+s+si}{\PYZob{}remote\PYZcb{}}\PY{l+s+s2}{ }\PY{l+s+si}{\PYZob{}local\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}
+                \PY{n}{rcode} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{system}\PY{p}{(}\PY{n}{command}\PY{p}{)}
+                \PY{k}{if} \PY{n}{rcode} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{n}{command}\PY{p}{)}
+                    \PY{k}{raise} \PY{n+ne}{Exception}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Bad Status code}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Velocity = }\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{, Loaded Job }\PY{l+s+si}{\PYZob{}job\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Velocity = -1.9, Loaded Job 539481
+Velocity = -1.9, Loaded Job 565638
+Velocity = -1.9, Loaded Job 565653
+Velocity = -1.5, Loaded Job 539480
+Velocity = -1.5, Loaded Job 565640
+Velocity = -1.5, Loaded Job 565654
+Velocity = -1.1, Loaded Job 539468
+Velocity = -1.1, Loaded Job 565641
+Velocity = -1.1, Loaded Job 565655
+Velocity = -0.9, Loaded Job 539461
+Velocity = -0.9, Loaded Job 565642
+Velocity = -0.9, Loaded Job 565656
+Velocity = -0.5, Loaded Job 539460
+Velocity = -0.5, Loaded Job 565643
+Velocity = -0.5, Loaded Job 565657
+Velocity = -0.1, Loaded Job 539427
+Velocity = -0.1, Loaded Job 565644
+Velocity = -0.1, Loaded Job 565658
+Velocity = 0.1, Loaded Job 536383
+Velocity = 0.1, Loaded Job 565645
+Velocity = 0.1, Loaded Job 565660
+Velocity = 0.5, Loaded Job 536384
+Velocity = 0.5, Loaded Job 565646
+Velocity = 0.5, Loaded Job 565661
+Velocity = 0.9, Loaded Job 536385
+Velocity = 0.9, Loaded Job 565647
+Velocity = 0.9, Loaded Job 565662
+Velocity = 1.1, Loaded Job 536386
+Velocity = 1.1, Loaded Job 565648
+Velocity = 1.1, Loaded Job 565663
+Velocity = 1.5, Loaded Job 536387
+Velocity = 1.5, Loaded Job 565649
+Velocity = 1.5, Loaded Job 565664
+Velocity = 1.9, Loaded Job 536388
+Velocity = 1.9, Loaded Job 565652
+Velocity = 1.9, Loaded Job 565665
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{lines} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{n}{job}\PY{p}{:} \PY{n}{read\PYZus{}log}\PY{p}{(}\PY{n}{localpaths}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{jobs}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{p}{(}\PY{n}{vel}\PY{p}{,} \PY{n}{jobs}\PY{p}{)} \PY{o+ow}{in} \PY{n}{velocities}\PY{o}{.}\PY{n}{items}\PY{p}{(}\PY{p}{)}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{warms} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{\PYZcb{}}
+        \PY{n}{slbos} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{\PYZcb{}}
+        
+        \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{:}
+            \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{:}
+                \PY{n}{warm}\PY{p}{,} \PY{n}{slbo} \PY{o}{=} \PY{n}{extract\PYZus{}rewards}\PY{p}{(}\PY{n}{lines}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)}
+                \PY{n}{warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{o}{=} \PY{n}{warm}
+                \PY{n}{slbos}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{o}{=} \PY{n}{slbo}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Velocity }\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{, Job }\PY{l+s+si}{\PYZob{}job\PYZcb{}}\PY{l+s+s2}{ has started }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{len(slbos[vel][job][0])\PYZcb{} stages}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Velocity -1.9, Job 539481 has started 100 stages
+Velocity -1.9, Job 565638 has started 67 stages
+Velocity -1.9, Job 565653 has started 68 stages
+Velocity -1.5, Job 539480 has started 100 stages
+Velocity -1.5, Job 565640 has started 68 stages
+Velocity -1.5, Job 565654 has started 68 stages
+Velocity -1.1, Job 539468 has started 100 stages
+Velocity -1.1, Job 565641 has started 70 stages
+Velocity -1.1, Job 565655 has started 68 stages
+Velocity -0.9, Job 539461 has started 100 stages
+Velocity -0.9, Job 565642 has started 69 stages
+Velocity -0.9, Job 565656 has started 67 stages
+Velocity -0.5, Job 539460 has started 100 stages
+Velocity -0.5, Job 565643 has started 66 stages
+Velocity -0.5, Job 565657 has started 69 stages
+Velocity -0.1, Job 539427 has started 100 stages
+Velocity -0.1, Job 565644 has started 68 stages
+Velocity -0.1, Job 565658 has started 69 stages
+Velocity 0.1, Job 536383 has started 100 stages
+Velocity 0.1, Job 565645 has started 69 stages
+Velocity 0.1, Job 565660 has started 69 stages
+Velocity 0.5, Job 536384 has started 100 stages
+Velocity 0.5, Job 565646 has started 68 stages
+Velocity 0.5, Job 565661 has started 68 stages
+Velocity 0.9, Job 536385 has started 100 stages
+Velocity 0.9, Job 565647 has started 68 stages
+Velocity 0.9, Job 565662 has started 92 stages
+Velocity 1.1, Job 536386 has started 100 stages
+Velocity 1.1, Job 565648 has started 69 stages
+Velocity 1.1, Job 565663 has started 97 stages
+Velocity 1.5, Job 536387 has started 100 stages
+Velocity 1.5, Job 565649 has started 66 stages
+Velocity 1.5, Job 565664 has started 99 stages
+Velocity 1.9, Job 536388 has started 100 stages
+Velocity 1.9, Job 565652 has started 69 stages
+Velocity 1.9, Job 565665 has started 99 stages
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{real\PYZus{}warms}\PY{p}{,} \PY{n}{virt\PYZus{}warms} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{\PYZcb{}}\PY{p}{,} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{\PYZcb{}}
+        
+        \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{:}
+            \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{:}
+                \PY{n}{rw}\PY{p}{,} \PY{n}{vr} \PY{o}{=} \PY{n}{get\PYZus{}warmup}\PY{p}{(}\PY{n}{lines}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)}
+                \PY{n}{real\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{o}{=} \PY{n}{rw}
+                \PY{n}{virt\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{o}{=} \PY{n}{vr}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Velocity }\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{ Job }\PY{l+s+si}{\PYZob{}job\PYZcb{}}\PY{l+s+s2}{ has }\PY{l+s+s2}{\PYZob{}}\PY{l+s+s2}{len(real\PYZus{}warms[vel][job])\PYZcb{} warmup iters}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Velocity -1.9 Job 539481 has 79 warmup iters
+Velocity -1.9 Job 565638 has 79 warmup iters
+Velocity -1.9 Job 565653 has 79 warmup iters
+Velocity -1.5 Job 539480 has 79 warmup iters
+Velocity -1.5 Job 565640 has 79 warmup iters
+Velocity -1.5 Job 565654 has 79 warmup iters
+Velocity -1.1 Job 539468 has 79 warmup iters
+Velocity -1.1 Job 565641 has 79 warmup iters
+Velocity -1.1 Job 565655 has 79 warmup iters
+Velocity -0.9 Job 539461 has 79 warmup iters
+Velocity -0.9 Job 565642 has 79 warmup iters
+Velocity -0.9 Job 565656 has 79 warmup iters
+Velocity -0.5 Job 539460 has 79 warmup iters
+Velocity -0.5 Job 565643 has 79 warmup iters
+Velocity -0.5 Job 565657 has 79 warmup iters
+Velocity -0.1 Job 539427 has 79 warmup iters
+Velocity -0.1 Job 565644 has 79 warmup iters
+Velocity -0.1 Job 565658 has 79 warmup iters
+Velocity 0.1 Job 536383 has 79 warmup iters
+Velocity 0.1 Job 565645 has 79 warmup iters
+Velocity 0.1 Job 565660 has 79 warmup iters
+Velocity 0.5 Job 536384 has 79 warmup iters
+Velocity 0.5 Job 565646 has 79 warmup iters
+Velocity 0.5 Job 565661 has 79 warmup iters
+Velocity 0.9 Job 536385 has 79 warmup iters
+Velocity 0.9 Job 565647 has 79 warmup iters
+Velocity 0.9 Job 565662 has 79 warmup iters
+Velocity 1.1 Job 536386 has 79 warmup iters
+Velocity 1.1 Job 565648 has 79 warmup iters
+Velocity 1.1 Job 565663 has 79 warmup iters
+Velocity 1.5 Job 536387 has 79 warmup iters
+Velocity 1.5 Job 565649 has 79 warmup iters
+Velocity 1.5 Job 565664 has 79 warmup iters
+Velocity 1.9 Job 536388 has 79 warmup iters
+Velocity 1.9 Job 565652 has 79 warmup iters
+Velocity 1.9 Job 565665 has 79 warmup iters
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{real\PYZus{}rewards} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{\PYZcb{}}
+         \PY{n}{virt\PYZus{}rewards} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{vel}\PY{p}{:} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{\PYZcb{}}
+         
+         \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{:}
+             \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{:}
+                 \PY{n}{real}\PY{p}{,} \PY{n}{virt} \PY{o}{=} \PY{n}{get\PYZus{}checkpoints}\PY{p}{(}\PY{n}{lines}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)}
+                 \PY{n}{real\PYZus{}rewards}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{o}{=} \PY{n}{real}
+                 \PY{n}{virt\PYZus{}rewards}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{o}{=} \PY{n}{virt}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{mins} \PY{o}{=} \PY{p}{\PYZob{}}
+             \PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{233.78927811594411}\PY{p}{,} 
+             \PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{411.35567527732564}\PY{p}{,} 
+             \PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{610.8872788980733}\PY{p}{,} 
+             \PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{710.8872788980734}\PY{p}{,} 
+             \PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{910.8872788980736}\PY{p}{,} 
+             \PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1110.8872788980734}\PY{p}{,}
+         \PY{p}{\PYZcb{}}
+         \PY{n}{maxs} \PY{o}{=} \PY{p}{\PYZob{}}
+             \PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{3.5636334132798204}\PY{p}{,} 
+             \PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{10.710668525449655}\PY{p}{,} 
+             \PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{30.98072317031702}\PY{p}{,} 
+             \PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{44.14465103596886}\PY{p}{,} 
+             \PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{51.02850590038164}\PY{p}{,} 
+             \PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{61.263854017466976}
+         \PY{p}{\PYZcb{}}
+         
+         \PY{n}{avgs} \PY{o}{=} \PY{p}{\PYZob{}}
+              \PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{10.202044447173503}\PY{p}{,} 
+             \PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{21.142860320736776}\PY{p}{,} 
+             \PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{46.16668517147687}\PY{p}{,} 
+             \PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{66.24972224328671}\PY{p}{,} 
+             \PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{87.42144407053759}\PY{p}{,} 
+             \PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{113.32796903390458}\PY{p}{,} 
+             \PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{137.50432902203622}\PY{p}{,}
+         \PY{p}{\PYZcb{}}
+         
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} AVERAGED }
+         
+         \PY{n}{maxs} \PY{o}{=} \PY{p}{\PYZob{}}\PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{90.60565689208266}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{70.67690735370886}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{42.06956291427862}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{36.99489419364075}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{23.743657058369845}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{21.157800214277188}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{3.1041742201174394}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{10.680755730823584}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{3.4021209446496337}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{12.323942266246538}\PY{p}{,} \PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{23.53198112703673}\PY{p}{,} \PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{31.343789461165542}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{51.21932985927324}\PY{p}{,} \PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{63.050301977318384}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{85.4236675900036}\PY{p}{\PYZcb{}}
+         \PY{n}{mins} \PY{o}{=} \PY{p}{\PYZob{}}\PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{993.9190119522864}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{945.0818382085795}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{745.0818382085795}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{546.2446644648728}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{510.61478664909976}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{445.43216946165614}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{187.5039532110764}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{259.65397607613966}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{231.2243621688237}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{410.1003669467948}\PY{p}{,} \PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{609.6475634930734}\PY{p}{,} \PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{709.6475634930736}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{909.6475634930736}\PY{p}{,} \PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1109.6475634930734}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1160.8872788980732}\PY{p}{\PYZcb{}}
+         \PY{n}{avgs} \PY{o}{=} \PY{p}{\PYZob{}}\PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{136.4502250988098}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{101.15423269038038}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{73.20949096123613}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{61.13370977385761}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{47.087996715423955}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{35.88038558730979}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{8.75671650336899}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{18.677280704086265}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{9.545282672321349}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{23.09364493886916}\PY{p}{,} \PY{l+m+mf}{0.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{40.610557419984794}\PY{p}{,} \PY{l+m+mf}{1.1}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{50.763872744894364}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{81.94783046596359}\PY{p}{,} \PY{l+m+mf}{1.9}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{105.55608759237818}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{:} \PY{o}{\PYZhy{}}\PY{l+m+mf}{137.50432902203622}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{k}{def} \PY{n+nf}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{n}{vel}\PY{p}{)}\PY{p}{:}
+             \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{:}
+                 \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{15}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         
+                 \PY{n}{plot\PYZus{}stage}\PY{p}{(}\PY{n}{ax}\PY{p}{,} \PY{n}{warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{80}\PY{p}{,} \PY{l+m+mi}{40}\PY{p}{)}
+                 \PY{n}{warm\PYZus{}iters} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{real\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)}
+         
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{40} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{warm\PYZus{}iters}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{n}{real\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{40} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{warm\PYZus{}iters}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{n}{virt\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{v}\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{ Warmup 80 Iters of SLBO}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{mins}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{yellow}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{maxs}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{orange}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{avgs}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{green}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{avg}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{300}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+                 \PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}35}]:} \PY{n}{seeds} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{100}\PY{p}{,} \PY{l+m+mi}{101}\PY{p}{,} \PY{l+m+mi}{102}\PY{p}{]}
+         \PY{k}{def} \PY{n+nf}{task\PYZus{}from\PYZus{}lines}\PY{p}{(}\PY{n}{lines}\PY{p}{)}\PY{p}{:}
+             \PY{k}{for} \PY{n}{line} \PY{o+ow}{in} \PY{n}{lines}\PY{p}{:}
+                 \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Task Fixed}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{line}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{fmt}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{:}
+                     \PY{k}{continue}
+                     
+                 \PY{k}{return} \PY{n}{line}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{args}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{goal\PYZus{}velocity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         
+         \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{:}
+             \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{:}
+                 \PY{c+c1}{\PYZsh{}print(f\PYZdq{}\PYZob{}task\PYZus{}from\PYZus{}lines(lines[vel][job])\PYZcb{} == \PYZob{}vel\PYZcb{}\PYZdq{})}
+                 \PY{k}{assert} \PY{n}{task\PYZus{}from\PYZus{}lines}\PY{p}{(}\PY{n}{lines}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)} \PY{o}{==} \PY{n}{vel}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{0.9}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{0.5}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{0.1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_16_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_16_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_16_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{l+m+mf}{0.1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_17_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_17_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_17_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{l+m+mf}{0.9}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_19_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_19_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_19_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{l+m+mf}{1.1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_20_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_20_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_20_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{l+m+mf}{1.5}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{plot\PYZus{}all\PYZus{}vel\PYZus{}warmups}\PY{p}{(}\PY{l+m+mf}{1.9}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_22_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_22_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_22_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{:}
+            \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{15}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+            
+            \PY{n}{plot\PYZus{}stage}\PY{p}{(}\PY{n}{ax}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{[}\PY{n}{warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{80}\PY{p}{,} \PY{l+m+mi}{40}\PY{p}{)}
+            \PY{n}{warm\PYZus{}iters} \PY{o}{=} \PY{n+nb}{min}\PY{p}{(}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{real\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+                                  
+            \PY{n}{ax}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}
+                \PY{p}{[}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{40} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{warm\PYZus{}iters}\PY{p}{)}\PY{p}{]}\PY{p}{,} 
+                \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{[}\PY{n}{real\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} 
+                \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{[}\PY{n}{real\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+                \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}
+                \PY{p}{[}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{40} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{warm\PYZus{}iters}\PY{p}{)}\PY{p}{]}\PY{p}{,} 
+                \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{[}\PY{n}{virt\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,}
+                \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{[}\PY{n}{virt\PYZus{}warms}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{[}\PY{n}{job}\PY{p}{]} \PY{k}{for} \PY{n}{job} \PY{o+ow}{in} \PY{n}{velocities}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+                \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{v}\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{ Warmup 80 Iters of SLBO}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{mins}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{yellow}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{min}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{maxs}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{orange}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{avgs}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{green}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{avg}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{300}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{he}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{n}{slbos}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{539481}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{plot\PYZus{}stages}\PY{p}{(}\PY{n}{slbos}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.9}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{539481}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{40}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{k}{for} \PY{n}{vel} \PY{o+ow}{in} \PY{n}{real\PYZus{}rewards}\PY{p}{:}
+            \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{real\PYZus{}rewards}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{n}{real\PYZus{}rewards}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vel=}\PY{l+s+si}{\PYZob{}vel\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{mins}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{yellow}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{maxs}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{orange}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{200}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{n}{avgs}\PY{p}{[}\PY{n}{vel}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{green}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{i}\PY{p}{)}
+\end{Verbatim}
+
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
