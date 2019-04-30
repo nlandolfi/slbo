@@ -152,8 +152,8 @@ def main():
                 logger.info('Task Fixed: %s', task.__str__())
 
         if FLAGS.task.reset_policy:
-            print("Resetting Policy")
-            print(policy.parameters())
+            logger.info("Resetting Policy")
+            logger.info(policy.parameters())
             tf.get_default_session().run(tf.variables_initializer(policy.parameters()))
 
         evaluate(settings, 'pre-warm-up')
@@ -263,7 +263,7 @@ def main():
                 max_ent_coef = 0.
 
             for i in range(FLAGS.slbo.n_iters):
-                if i % FLAGS.slbo.n_evaluate_iters == 0 and i != 0:
+                if i % FLAGS.slbo.n_evaluate_iters == 0:# and i != 0:
                     # cur_actions = policy.eval('actions_mean actions_std', states=recent_states)
                     # kl_old_new = gaussian_kl(*ref_actions, *cur_actions).sum(axis=1).mean()
                     # logger.info('KL(old || cur) = %.6f', kl_old_new)
@@ -309,11 +309,11 @@ def main():
                                 'dist std = %.10f, dist mean = %.10f, vf_loss = %.3f',
                                 n_updates, len(returns), np.mean(returns), np.std(returns) / np.sqrt(len(returns)),
                                 dist_std, dist_mean, vf_loss)
-            if T % FLAGS.ckpt.n_save_stages == 0:
-                np.save(f'{FLAGS.log_dir}/stage-{T}', saver.state_dict())
+            if (TASK_NUM*FLAGS.slbo.n_iters + T) % FLAGS.ckpt.n_save_stages == 0:
+                np.save(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_iters + T}', saver.state_dict())
                 np.save(f'{FLAGS.log_dir}/final', saver.state_dict())
             if FLAGS.ckpt.n_save_stages == 1:
-                pickle.dump(recent_train_set, open(f'{FLAGS.log_dir}/stage-{T}.inc-buf.pkl', 'wb'))
+                pickle.dump(recent_train_set, open(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_iters + T}.inc-buf.pkl', 'wb'))
 
         evaluate(settings, 'post-slbo')
 

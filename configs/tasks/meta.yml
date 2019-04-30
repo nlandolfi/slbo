@@ -2,7 +2,7 @@ task:
   n_iters: 50
   method: 'fixed'
 slbo:
-  n_iters: 20
+  n_iters: 0 # just collect the data.
   n_stages: 1
 warmup:
   n_iters: 40
