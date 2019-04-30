@@ -1,5 +1,5 @@
 task:
-  fixed_velocities: [-.inf, .inf, -.inf, -.inf, .inf, .inf, -.inf, -.inf, .inf, .inf, .inf, .inf, .inf, .inf, -.inf, .inf, .inf, -.inf, -.inf, .inf, .inf, -.inf, -.inf, .inf, -.inf, -.inf, .inf, -.inf, -.inf, .inf, .inf, .inf, -.inf, -.inf, .inf, .inf, .inf, -.inf, .inf, .inf, .inf, .inf, -.inf, .inf, .inf, .inf, .inf, -.inf, .inf, -.inf, [-.inf,
+  fixed_velocities: [-.inf, .inf, -.inf, -.inf, .inf, .inf, -.inf, -.inf, .inf, .inf, .inf, .inf, .inf, .inf, -.inf, .inf, .inf, -.inf, -.inf, .inf, .inf, -.inf, -.inf, .inf, -.inf, -.inf, .inf, -.inf, -.inf, .inf, .inf, .inf, -.inf, -.inf, .inf, .inf, .inf, -.inf, .inf, .inf, .inf, .inf, -.inf, .inf, .inf, .inf, .inf, -.inf, .inf, -.inf, -.inf,
  -.inf,
  -.inf,
  -.inf,
@@ -48,4 +48,4 @@ task:
  -.inf,
  .inf,
  -.inf,
- -.inf]]
+ -.inf]
