@@ -1,4 +1,5 @@
 import math
+import os
 import sys
 import subprocess
 
@@ -25,15 +26,16 @@ def main(exp):
         raise Exception("Unkown eval experiment")
 
     jobs = []
-
+    e = os.environ.copy()
     for vel in vels[exp]:
         if vel == math.inf:
-            s = ".inf"
+            e["VELOCITY"] = ".inf"
         elif vel == -math.inf:
-            s = "-.inf"
+            e["VELOCITY"] = "-.inf"
         else:
-            s = f"{vel}"
-        x = subprocess.run(args=["sbatch", tasks[exp]], env={"VELOCITY": s}, stdout=subprocess.PIPE)
+            e["VELOCITY"] = f"{vel}"
+            
+        x = subprocess.run(args=["sbatch", tasks[exp]], env=e, stdout=subprocess.PIPE)
         job = int(x.stdout[-7:-1])
         jobs.append(job)
     print(jobs)
