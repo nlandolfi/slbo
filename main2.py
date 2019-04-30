@@ -144,7 +144,7 @@ def main():
             else:
                 logger.info('Task Sampled: %s', task.__str__())
         elif FLAGS.task.method == 'fixed':
-            assert len(FLAGS.task.fixed_velocities) == FLAGS.task.n_iters
+            assert len(FLAGS.task.fixed_velocities) == FLAGS.task.n_iters, f"{len(FLAGS.task.fixed_velocities} given velocities, but task.n_iters = {FLAGS.task.n_iters}"
             task.goal_velocity = FLAGS.task.fixed_velocities[TASK_NUM]
             if np.abs(task.goal_velocity) < 10:
                 logger.info('Task Fixed: %s', task)
