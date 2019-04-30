@@ -69,6 +69,11 @@ class SLBOIter(object):
         assert len(self.real_stds_evals) == len(self.virt_mean_evals)
         assert len(self.virt_mean_evals) == len(self.virt_stds_evals)
 
+    def duration_in_seconds(self):
+        if len(self.trpo_times) == 0:
+            return 0
+        return self.trpo_times[-1] - self.trpo_times[0]
+
     def plot(self, minrew=None, maxrew=None, avgrew=None, title=None, ylim=None):
         try:
             self.verify()
@@ -136,7 +141,9 @@ class Run(object):
     
     tasks: typing.List[float]
 
-    post_slbo_eval_means: np.array
+    post_slbo_real_eval_means: np.array
+    post_slbo_real_eval_stds: np.array
+    post_slbo_real_eval_times: np.array
 
     # task number, TRPO iteration.
     warms: typing.List[SLBOIter]
@@ -154,7 +161,9 @@ class Run(object):
         self.tasks = []
         self.warms = []
         self.slbos = []
-        self.post_slbo_eval_means = np.array([])
+        self.post_slbo_real_eval_means = np.array([])
+        self.post_slbo_real_eval_stds = np.array([])
+        self.post_slbo_real_eval_times = np.array([])
 
     def append_task(self, t: float): 
         self.tasks.append(t)
@@ -165,8 +174,10 @@ class Run(object):
     def append_slbo(self, s: SLBO):
         self.slbos.append(s)
 
-    def append_post_slbo_eval(self, mean: float, std: float):
-        self.post_slbo_eval_means = np.append(self.post_slbo_eval_means, mean)
+    def append_post_slbo_real_eval(self, mean: float, std: float, time: int):
+        self.post_slbo_real_eval_means = np.append(self.post_slbo_real_eval_means, mean)
+        self.post_slbo_real_eval_stds = np.append(self.post_slbo_real_eval_stds, std)
+        self.post_slbo_real_eval_times = np.append(self.post_slbo_real_eval_times, time)
 
     def plot_tasks(self):
         plt.stem(self.tasks)
@@ -176,6 +187,19 @@ class Run(object):
 
     def details(self):
         print(f"Run:\n\t{len(self.tasks)} Tasks so far")
+
+    def plot_post_slbo_evals(self, ylim=None):
+        fig, ax = plt.subplots(figsize=(15, 5))
+        ax.errorbar(
+            np.arange(len(self.post_slbo_real_eval_means)),
+            self.post_slbo_real_eval_means,
+            self.post_slbo_real_eval_stds,
+            color='red',
+            fmt='o',
+            label="real evals"
+        )
+        if ylim is not None:
+            ax.set_ylim(ylim)
 
     def plot_timing(self):
         offset = 0
@@ -187,7 +211,7 @@ class Run(object):
 
             ntrpos = len(self.warms[i].trpo_times)
 
-            ax.plot(offset + inoff + np.arange(ntrpos), self.warms[i].trpo_times - r.start_time, color="blue", label="warmup")
+            ax.plot(offset + inoff + np.arange(ntrpos), self.warms[i].trpo_times - self.start_time, color="blue", label="warmup")
 
             inoff += ntrpos
 
@@ -196,12 +220,14 @@ class Run(object):
                 stage: SLBOIter= self.slbos[i].stages[j]
                 ntrpos = len(stage.trpo_times)
 
-                ax.plot(offset + inoff + ininoff + np.arange(ntrpos), stage.trpo_times - r.start_time, color="green", label="stage")
+                ax.plot(offset + inoff + ininoff + np.arange(ntrpos), stage.trpo_times - self.start_time, color="green", label="stage")
                 ininoff += ntrpos
 
                 inoff += ininoff
 
             offset += inoff       
+
+
 
 
 # read a structured log file with lines of JSON to a list of dictionaries.
@@ -283,9 +309,8 @@ def from_lines(lines) -> Run:
                 raise Exception("shouldn't have episode eval in warmup!")
 
         if "post-slbo" == args[0]:
-            r.append_post_slbo_eval(args[3], args[4])
-
-            
+            if args[1] == "Real Env":
+                r.append_post_slbo_real_eval(args[3], args[4], time.timestamp())
 
     return r
 

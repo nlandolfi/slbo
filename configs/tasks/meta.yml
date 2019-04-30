@@ -1,5 +1,5 @@
 task:
-  n_iters: 50
+  n_iters: 100
   method: 'fixed'
 slbo:
   n_iters: 0 # just collect the data.

@@ -1,0 +1,5 @@
+slbo:
+  n_evaluate_iters: 1
+task:
+  n_iters: 1
+  method: 'fixed'
