@@ -309,11 +309,12 @@ def main():
                                 'dist std = %.10f, dist mean = %.10f, vf_loss = %.3f',
                                 n_updates, len(returns), np.mean(returns), np.std(returns) / np.sqrt(len(returns)),
                                 dist_std, dist_mean, vf_loss)
-            if (TASK_NUM*FLAGS.slbo.n_iters + T) % FLAGS.ckpt.n_save_stages == 0:
-                np.save(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_iters + T}', saver.state_dict())
+            
+            if (TASK_NUM*FLAGS.slbo.n_stages + T) % FLAGS.ckpt.n_save_stages == 0:
+                np.save(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_stages + T}', saver.state_dict())
                 np.save(f'{FLAGS.log_dir}/final', saver.state_dict())
             if FLAGS.ckpt.n_save_stages == 1:
-                pickle.dump(recent_train_set, open(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_iters + T}.inc-buf.pkl', 'wb'))
+                pickle.dump(recent_train_set, open(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_stages + T}.inc-buf.pkl', 'wb'))
 
         evaluate(settings, 'post-slbo')
 
