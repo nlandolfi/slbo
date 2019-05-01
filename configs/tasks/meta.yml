@@ -4,6 +4,7 @@ task:
 slbo:
   n_iters: 0 # just collect the data.
   n_stages: 1
+  n_evaluate_iters: 1
 warmup:
   n_iters: 40
   n_policy_iters: 40
