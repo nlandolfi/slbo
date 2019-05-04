@@ -5,3 +5,4 @@ task:
   method: 'fixed'
 slbo: 
   n_iters: 40
+  n_stages: 4
