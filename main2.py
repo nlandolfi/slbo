@@ -160,7 +160,8 @@ def main():
 
         for i in range(FLAGS.warmup.n_iters):
             if TASK_NUM == 0:
-                break
+                if not FLAGS.ckpt.model_load:
+                    break
 
             if i % FLAGS.warmup.n_evaluate_iters == 0 and i != 0:
                 # cur_actions = policy.eval('actions_mean actions_std', states=recent_states)
