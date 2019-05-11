@@ -10,6 +10,7 @@ from slbo.envs.mujoco.ant_task_env import AntTaskEnv, AntTaskConfig
 from slbo.envs.mujoco.ant2d_task_env import Ant2DTaskEnv, Ant2DTaskConfig
 from slbo.envs.mujoco.half_cheetah_task_env import HalfCheetahTaskEnv, HalfCheetahTaskConfig
 from slbo.envs.mujoco.swimmer_task_env import SwimmerTaskEnv, SwimmerTaskConfig
+from slbo.envs.mujoco.humanoid_task_env import HumanoidTaskEnv, HumanoidTaskConfig
 
 envs = {
     'HalfCheetah-v2': HalfCheetahEnv,
@@ -24,12 +25,14 @@ task_envs = {
     'Ant2DTask-v2': Ant2DTaskEnv,
     'HalfCheetahTask-v2': HalfCheetahTaskEnv,
     'SwimmerTask-v2': SwimmerTaskEnv,
+    'HumanoidTask-v2': HumanoidTaskEnv,
 }
 task_configs = {
     'AntTask-v2': AntTaskConfig,
     'Ant2DTask-v2': Ant2DTaskConfig,
     'HalfCheetahTask-v2': HalfCheetahTaskConfig,
     'SwimmerTask-v2': SwimmerTaskConfig,
+    'HumanoidTask-v2': HumanoidTaskConfig,
 }
 
 for k in task_envs:
