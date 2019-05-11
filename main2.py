@@ -139,7 +139,7 @@ def main():
         logger.info("### STARTING TASK %d ###", TASK_NUM)
         if FLAGS.task.method == 'random':
             task.sample()
-            if np.abs(task.goal_velocity) < 10:
+            if np.all(np.abs(task.goal_velocity)) < 10:
                 logger.info('Task Sampled: %s', task)
             else:
                 logger.info('Task Sampled: %s', task.__str__())
