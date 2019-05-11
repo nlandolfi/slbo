@@ -1,5 +1,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 env:
   id: AntTask-v2
+plan:
+  max_steps: 200
 runner:
   max_steps: 200
