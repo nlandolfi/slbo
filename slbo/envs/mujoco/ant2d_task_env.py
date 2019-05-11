@@ -7,7 +7,7 @@ from slbo.envs import BaseModelBasedEnv
 
 Ant2DTaskConfig = ant2d_task_env.Ant2DTaskConfig
 
-class Ant2DTaskEnv(ant2d_task_env.AntTaskEnv, BaseModelBasedEnv):
+class Ant2DTaskEnv(ant2d_task_env.Ant2DTaskEnv, BaseModelBasedEnv):
     def get_current_obs(self):
         return np.concatenate([
             self.model.data.qpos.flat,  # 15
