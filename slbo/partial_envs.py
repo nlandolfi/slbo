@@ -21,13 +21,13 @@ envs = {
 }
 task_envs = {
     'AntTask-v2': AntTaskEnv,
-    'AntTask2D-v2': Ant2DTaskEnv,
+    'Ant2DTask-v2': Ant2DTaskEnv,
     'HalfCheetahTask-v2': HalfCheetahTaskEnv,
     'SwimmerTask-v2': SwimmerTaskEnv,
 }
 task_configs = {
     'AntTask-v2': AntTaskConfig,
-    'AntTask2D-v2': Ant2DTaskConfig,
+    'Ant2DTask-v2': Ant2DTaskConfig,
     'HalfCheetahTask-v2': HalfCheetahTaskConfig,
     'SwimmerTask-v2': SwimmerTaskConfig,
 }
