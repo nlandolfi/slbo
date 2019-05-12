@@ -184,6 +184,13 @@ def main():
                     for param in model.parameters():
                         param.invalidate()
 
+
+        r0, m1 = shadow_runners[0], shadow_models[1]
+        data, ep_infos = r0.run(policy, FLAGS.rollout.n_test_samples)
+        logger.info('data', data)
+        logger.info('state', data['state'])
+        state_errs = np.linalg.norm(data['next_state'] - m1.forward(data['state'], data['action']), axis=1)
+
         evaluate(settings, 'pre-warm-up')
 
         for i in range(FLAGS.warmup.n_iters):
