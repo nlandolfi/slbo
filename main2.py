@@ -287,8 +287,7 @@ def main():
 
                 r0, m1 = shadow_runners[0], shadow_models[1]
                 data, ep_infos = r0.run(policy, FLAGS.rollout.n_test_samples)
-                data['states']
-                state_errs = np.linalg.norm(data['next_states'] - m1.forward(data['states'], data['actions']), axis=1)
+                state_errs = np.linalg.norm(data['next_state'] - m1.forward(data['state'], data['action']), axis=1)
 
                 if FLAGS.task.skip_policy == 'shadow-state-error':
                     logger.info("SHADOW STATE ERRORS MEAN %.10f", np.mean(state_errs))
@@ -303,7 +302,7 @@ def main():
                 real_returns = [info['return'] for info in ep_infos]
                 _, ep_infos = runners['train'].run(policy, FLAGS.rollout.n_test_samples)
                 virt_returns = [info['return'] for info in ep_infos]
-                errs = np.linalg.norm(real_data['next_states'] - model.forward(real_data['states'], real_data['actions']), axis=1)
+                errs = np.linalg.norm(real_data['next_state'] - model.forward(real_data['state'], real_data['action']), axis=1)
 
                 if FLAGS.task.skip_policy == 'real-reward-diff':
                     logger.info("REAL REWARD DIFF %.10f", np.mean(virt_returns) - np.mean(real_returns))
