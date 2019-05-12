@@ -135,7 +135,11 @@ def main():
             for param in model.parameters():
                 param.invalidate()
 
-    for TASK_NUM in range(FLAGS.task.n_iters):
+
+    skip_metrics = []
+    TASK_NUM = 0
+
+    while TASK_NUM < FLAGS.task.n_iters:
         logger.info("### STARTING TASK %d ###", TASK_NUM)
         if FLAGS.task.method == 'random':
             task.sample()
@@ -144,7 +148,8 @@ def main():
             else:
                 logger.info('Task Sampled: %s', task.__str__())
         elif FLAGS.task.method == 'fixed':
-            assert len(FLAGS.task.fixed_velocities) == FLAGS.task.n_iters, f"{len(FLAGS.task.fixed_velocities)} given velocities, but task.n_iters = {FLAGS.task.n_iters}"
+            if FLAGS.task.skip_policy == 'none':
+                assert len(FLAGS.task.fixed_velocities) == FLAGS.task.n_iters, f"{len(FLAGS.task.fixed_velocities)} given velocities, but task.n_iters = {FLAGS.task.n_iters}"
             task.goal_velocity = FLAGS.task.fixed_velocities[TASK_NUM]
             if np.all(np.abs(task.goal_velocity) < 10):
                 logger.info('Task Fixed: %s', task)
@@ -155,6 +160,27 @@ def main():
             logger.info("Resetting Policy")
             #logger.info(policy.parameters())
             tf.get_default_session().run(tf.variables_initializer(policy.parameters()))
+
+
+        last_end = None
+        drops = []
+
+        logger.info("Training Shadow Models")
+        for (model, loss_mod) in zip(shadow_models, shadow_loss_mods):
+            losses = deque(maxlen=FLAGS.warmup.n_shadow_model_iters)
+            grad_norm_meter = AverageMeter()
+            n_model_iters = FLAGS.warmup.n_shadow_model_iters
+            for _ in range(n_model_iters):
+                samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
+                _, train_loss, grad_norm = loss_mod.get_loss(
+                    samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
+                    fetch='train loss grad_norm')
+                losses.append(train_loss.mean())
+                grad_norm_meter.update(grad_norm)
+                # ideally, we should define an Optimizer class, which takes parameters as inputs.
+                # The `update` method of `Optimizer` will invalidate all parameters during updates.
+                for param in model.parameters():
+                    param.invalidate()
 
         evaluate(settings, 'pre-warm-up')
 
@@ -220,12 +246,86 @@ def main():
                 advantages, values = runners['train'].compute_advantage(vfn, data)
                 dist_mean, dist_std, vf_loss = algo.train(max_ent_coef, data, advantages, values)
                 returns = [info['return'] for info in ep_infos]
+                if n_updates == 0:
+                    if last_end is not None:
+                        logger.info("DROP: %.10f", last_end - np.mean(returns))
+                        drops.append(last_end - np.mean(returns))
+                last_end = np.mean(returns)
                 logger.info('[TRPO] # %d: n_episodes = %d, returns: {mean = %.0f, std = %.0f}, '
                             'dist std = %.10f, dist mean = %.10f, vf_loss = %.3f',
                             n_updates, len(returns), np.mean(returns), np.std(returns) / np.sqrt(len(returns)),
                             dist_std, dist_mean, vf_loss)
 
         evaluate(settings, 'post-warm-up')
+
+        logger.info("Task skip policy %s", FLAGS.task.skip_policy)
+        if FLAGS.task.skip_policy == 'none':
+            pass
+        elif FLAGS.task.skip_policy == 'drop-mean' or FLAGS.task.skip_policy == 'drop-variance':
+            assert len(drops) > 10
+            if FLAGS.task.skip_policy == 'drop-mean':
+                logger.info("DROP MEAN %.10f", np.mean(drops[-10]))
+                skip_metrics.append(np.mean(drops[-10]))
+            elif FLAGS.task.skip_policy == 'drop-variance':
+                logger.info("DROP STD %.10f", np.std(drops[-10]))
+                skip_metrics.append(np.std(drops[-10]))
+            else:
+                raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
+        elif FLAGS.task.skip_policy == 'shadow-reward-variance':
+            shadow_returns = []
+            for env in shadow_envs:
+                data, ep_infos = env.run(policy, FLAGS.rollout.n_test_samples)
+                returns = [info['return'] for info in ep_infos]
+                shadow_returns.append(np.mean(returns))
+            logger.info("Shadow Returns %s, mean=%.10f, std=%.10f", shadow_returns, np.mean(shadow_returns), np.std(shadow_returns))
+            skip_metrics.append(np.std(shadow_returns))
+        elif FLAGS.task.skip_policy == 'shadow-state-error' or FLAGS.task.skip_policy == 'shadow-state-variance':
+            assert FLAGS.warmup.n_shadow_models >= 2
+
+            e0, m1 = shadow_envs[0], shadow_models[1]
+            data, ep_infos = e0.run(policy, FLAGS.rollout.n_test_samples)
+            data['states']
+            state_errs = np.linalg.norm(data['next_states'] - m1.forward(data['states'], data['actions']), axis=1)
+
+            if FLAGS.task.skip_policy == 'shadow-state-error':
+                logger.info("SHADOW STATE ERRORS MEAN %.10f", np.mean(state_errs))
+                skip_metrics.append(np.mean(state_errs))
+            elif FLAGS.task.skip_policy == 'shadow-state-variance':
+                logger.info("SHADOW STATE ERRORS STD %.10f", np.std(state_errs))
+                skip_metrics.append(np.std(state_errs))
+            else:
+                raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
+        elif FLAGS.task.skip_policy == 'real-reward-diff' or FLAGS.task.skip_policy == 'real-state-err' or FLAGS.task.skip_policy == 'real-state-variance':
+            real_data, ep_infos = runners['test'].run(policy, FLAGS.rollout.n_test_samples)
+            real_returns = [info['return'] for info in ep_infos]
+            _, ep_infos = runners['train'].run(policy, FLAGS.rollout.n_test_samples)
+            virt_returns = [info['return'] for info in ep_infos]
+            errs = np.linalg.norm(real_data['next_states'] - model.forward(real_data['states'], real_data['actions']), axis=1)
+
+            if FLAGS.task.skip_policy == 'real-reward-diff':
+                logger.info("REAL REWARD DIFF %.10f", np.mean(virt_returns) - np.mean(real_returns))
+                skip_metrics.append(np.mean(virt_returns) - np.mean(real_returns))
+            elif FLAGS.task.skip_policy == 'real-state-err':
+                logger.info("REAL STATE ERRORS MEAN %.10f", np.mean(errs))
+                skip_metrics.append(np.mean(errs))
+            elif FLAGS.task.skip_policy == 'real-state-variance':
+                logger.info("REAL STATE ERRORS STD %.10f", np.std(errs))
+                skip_metrics.append(np.std(errs))
+            else:
+                raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
+        else:
+            raise Exception(f"unknown skip policy {FlAGS.task.skip_policy}")
+        
+        if len(skip_metrics) > 0:
+            logger.info("SKIP METRIC %.10f", skip_metrics[-1])
+
+        if len(skip_metrics) >= 11:
+            if skip_metrics[-1] < np.median(skip_metrics[-11:-1]):
+                logger.info("SKIPPING TASK (%s) %d < %d", FLAGS.task.skip_policy, skip_metrics[-1], np.median(skip_metrics[-11:-1]))
+                continue
+            else:
+                TASK_NUM += 1
+                logger.info("PERFORMING TASK (%s) %d > %d", FLAGS.task.skip_policy, skip_metrics[-1], np.median(skip_metrics[-11:-1]))
 
         for T in range(FLAGS.slbo.n_stages):
             logger.info('------ Starting Stage %d --------', T)
