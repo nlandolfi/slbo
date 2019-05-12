@@ -57,7 +57,7 @@ class HumanoidTaskEnv(humanoid_task_env.HumanoidTaskEnv, BaseModelBasedEnv):
             lin_vel_reward = -np.abs(next_states[:, 36] - self._task_config.goal_velocity)  
         ctrl_cost = 5.e-4 * np.square(actions / scaling).sum(axis=1)
         impact_cost = 0.
-        vel_deviation_cost = 5.e-3 * np.square(next_states[:, 37:39]).sum(axis=1)
+        vel_deviation_cost = 5.e-1 * np.square(next_states[:, 37:39]).sum(axis=1)
         reward = lin_vel_reward + alive_bonus - ctrl_cost - impact_cost - vel_deviation_cost
 
         dones = (next_states[:, 2] < 0.8) | (next_states[:, 2] > 2.0)
