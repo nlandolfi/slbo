@@ -36,8 +36,8 @@ class HumanoidTaskEnv(humanoid_task_env.HumanoidTaskEnv, BaseModelBasedEnv):
         impact_cost = 0.
         vel_deviation_cost = 0.5 * self.vel_deviation_cost_coeff * np.sum(
             np.square(comvel[1:]))
-        reward = lin_vel_reward #+ #alive_bonus - ctrl_cost - \
-            #impact_cost - vel_deviation_cost
+        reward = lin_vel_reward + alive_bonus - ctrl_cost - \
+            impact_cost - vel_deviation_cost
         pos = data.qpos.flat[2]
         done = pos < 0.8 or pos > 2.0
 
@@ -58,7 +58,7 @@ class HumanoidTaskEnv(humanoid_task_env.HumanoidTaskEnv, BaseModelBasedEnv):
         ctrl_cost = 5.e-4 * np.square(actions / scaling).sum(axis=1)
         impact_cost = 0.
         vel_deviation_cost = 5.e-3 * np.square(next_states[:, 37:39]).sum(axis=1)
-        reward = lin_vel_reward #+ #alive_bonus - ctrl_cost - impact_cost - vel_deviation_cost
+        reward = lin_vel_reward + alive_bonus - ctrl_cost - impact_cost - vel_deviation_cost
 
         dones = (next_states[:, 2] < 0.8) | (next_states[:, 2] > 2.0)
         return reward, dones
