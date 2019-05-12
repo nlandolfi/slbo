@@ -119,21 +119,22 @@ def main():
 
     max_ent_coef = FLAGS.TRPO.ent_coef
 
-    for (model, loss_mod) in zip(shadow_models, shadow_loss_mods):
-        losses = deque(maxlen=FLAGS.warmup.n_shadow_model_iters)
-        grad_norm_meter = AverageMeter()
-        n_model_iters = FLAGS.warmup.n_shadow_model_iters
-        for _ in range(n_model_iters):
-            samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
-            _, train_loss, grad_norm = loss_mod.get_loss(
-                samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
-                fetch='train loss grad_norm')
-            losses.append(train_loss.mean())
-            grad_norm_meter.update(grad_norm)
-            # ideally, we should define an Optimizer class, which takes parameters as inputs.
-            # The `update` method of `Optimizer` will invalidate all parameters during updates.
-            for param in model.parameters():
-                param.invalidate()
+    if FLAGS.ckpt.buf_load:
+        for (model, loss_mod) in zip(shadow_models, shadow_loss_mods):
+            losses = deque(maxlen=FLAGS.warmup.n_shadow_model_iters)
+            grad_norm_meter = AverageMeter()
+            n_model_iters = FLAGS.warmup.n_shadow_model_iters
+            for _ in range(n_model_iters):
+                samples = train_set.sample_multi_step(FLAGS.model.train_batch_size, 1, FLAGS.model.multi_step)
+                _, train_loss, grad_norm = loss_mod.get_loss(
+                    samples.state, samples.next_state, samples.action, ~samples.done & ~samples.timeout,
+                    fetch='train loss grad_norm')
+                losses.append(train_loss.mean())
+                grad_norm_meter.update(grad_norm)
+                # ideally, we should define an Optimizer class, which takes parameters as inputs.
+                # The `update` method of `Optimizer` will invalidate all parameters during updates.
+                for param in model.parameters():
+                    param.invalidate()
 
 
     skip_metrics = []
