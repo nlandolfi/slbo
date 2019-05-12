@@ -325,9 +325,9 @@ def main():
                 logger.info("SKIPPING TASK (%s) %d < %d", FLAGS.task.skip_policy, skip_metrics[-1], np.median(skip_metrics[-11:-1]))
                 continue
             else:
-                TASK_NUM += 1
                 logger.info("PERFORMING TASK (%s) %d > %d", FLAGS.task.skip_policy, skip_metrics[-1], np.median(skip_metrics[-11:-1]))
-
+        
+        TASK_NUM += 1
         for T in range(FLAGS.slbo.n_stages):
             logger.info('------ Starting Stage %d --------', T)
             evaluate(settings, 'episode')
