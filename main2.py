@@ -317,7 +317,7 @@ def main():
                 else:
                     raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
             else:
-                raise Exception(f"unknown skip policy {FlAGS.task.skip_policy}")
+                raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
         
         if len(skip_metrics) > 0:
             logger.info("SKIP METRIC %.10f", skip_metrics[-1])
