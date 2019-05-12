@@ -276,8 +276,8 @@ def main():
                     raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
             elif FLAGS.task.skip_policy == 'shadow-reward-variance':
                 shadow_returns = []
-                for env in shadow_envs:
-                    data, ep_infos = env.run(policy, FLAGS.rollout.n_test_samples)
+                for runner in shadow_runners:
+                    data, ep_infos = runner.run(policy, FLAGS.rollout.n_test_samples)
                     returns = [info['return'] for info in ep_infos]
                     shadow_returns.append(np.mean(returns))
                 logger.info("Shadow Returns %s, mean=%.10f, std=%.10f", shadow_returns, np.mean(shadow_returns), np.std(shadow_returns))
@@ -285,8 +285,8 @@ def main():
             elif FLAGS.task.skip_policy == 'shadow-state-error' or FLAGS.task.skip_policy == 'shadow-state-variance':
                 assert FLAGS.warmup.n_shadow_models >= 2
 
-                e0, m1 = shadow_envs[0], shadow_models[1]
-                data, ep_infos = e0.run(policy, FLAGS.rollout.n_test_samples)
+                r0, m1 = shadow_runners[0], shadow_models[1]
+                data, ep_infos = r0.run(policy, FLAGS.rollout.n_test_samples)
                 data['states']
                 state_errs = np.linalg.norm(data['next_states'] - m1.forward(data['states'], data['actions']), axis=1)
 
