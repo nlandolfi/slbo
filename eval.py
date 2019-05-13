@@ -20,7 +20,9 @@ tasks = {
     "HCF": "/tiger/u/lando/jobs/HCF-eval.sh",
     "AFB": "/tiger/u/lando/jobs/AFB-eval.sh",
     "AP": "/tiger/u/lando/jobs/AP-eval.sh",
-    "AF": "/tiger/u/lando/jobs/AF-eval.sh"
+    "AF": "/tiger/u/lando/jobs/AF-eval.sh",
+    "AD": "/tiger/u/lando/jobs/AD-eval.sh",
+    "HUFB": "/tiger/u/lando/jobs/HUFB-eval.sh"
 }
 
 def main(exp):
