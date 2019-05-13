@@ -267,11 +267,11 @@ def main():
             elif FLAGS.task.skip_policy == 'drop-mean' or FLAGS.task.skip_policy == 'drop-variance':
                 assert len(drops) > 10
                 if FLAGS.task.skip_policy == 'drop-mean':
-                    logger.info("DROP MEAN %.10f", np.mean(drops[-10]))
-                    skip_metrics.append(np.mean(drops[-10]))
+                    logger.info("DROP MEAN %.10f", np.mean(drops[-10:]))
+                    skip_metrics.append(np.mean(drops[-10:]))
                 elif FLAGS.task.skip_policy == 'drop-variance':
-                    logger.info("DROP STD %.10f", np.std(drops[-10]))
-                    skip_metrics.append(np.std(drops[-10]))
+                    logger.info("DROP STD %.10f", np.std(drops[-10:]))
+                    skip_metrics.append(np.std(drops[-10:]))
                 else:
                     raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
             elif FLAGS.task.skip_policy == 'shadow-reward-variance':
