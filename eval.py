@@ -41,7 +41,7 @@ def main(exp):
 
         x = subprocess.run(args=["sbatch", tasks[exp], "-o", "/tiger/u/lando/jobs/slurm-%j.out"], env=e, stdout=subprocess.PIPE)
         job = int(x.stdout[-7:-1])
-        jobs.append(job)e
+        jobs.append(job)
     print(jobs)
 
 
