@@ -37,7 +37,7 @@ def main(exp):
         elif vel == -math.inf:
             e["VELOCITY"] = "[-.inf]"
         else:
-            e["VELOCITY"] = f"[{vel}]"
+            e["VELOCITY"] = f"[{vel}]".replace(" ", "\ ")
 
         x = subprocess.run(args=["sbatch", tasks[exp], "-o", "/tiger/u/lando/jobs/slurm-%j.out"], env=e, stdout=subprocess.PIPE)
         job = int(x.stdout[-7:-1])
