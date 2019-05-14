@@ -129,12 +129,18 @@ class SLBOIter(object):
 
 class SLBO(object):
     stages: typing.List[SLBOIter]
+    episode_real_mean_evals: np.array
 
     def __init__(self):
         self.stages = []
+        self.episode_real_mean_evals = np.array([])
 
     def append_stage(self, s: SLBOIter):
         self.stages.append(s)
+
+    def append_episode_real_mean_evals(self, mean: float, std: float, time: int):
+        self.episode_real_mean_evals = np.append(self.episode_real_mean_evals, mean)
+
 
 class Run(object):
     start_time: int
@@ -144,6 +150,15 @@ class Run(object):
     post_slbo_real_eval_means: np.array
     post_slbo_real_eval_stds: np.array
     post_slbo_real_eval_times: np.array
+    pre_warmup_real_eval_means: np.array
+    pre_warmup_real_eval_stds: np.array
+    pre_warmup_real_eval_times: np.array
+    post_warmup_real_eval_means: np.array
+    post_warmup_real_eval_stds: np.array
+    post_warmup_real_eval_times: np.array
+
+    skip_metrics: np.array
+    n_skips: np.array
 
     # task number, TRPO iteration.
     warms: typing.List[SLBOIter]
@@ -164,6 +179,14 @@ class Run(object):
         self.post_slbo_real_eval_means = np.array([])
         self.post_slbo_real_eval_stds = np.array([])
         self.post_slbo_real_eval_times = np.array([])
+        self.pre_warmup_real_eval_means = np.array([])
+        self.pre_warmup_real_eval_stds = np.array([])
+        self.pre_warmup_real_eval_times = np.array([])
+        self.post_warmup_real_eval_means = np.array([])
+        self.post_warmup_real_eval_stds = np.array([])
+        self.post_warmup_real_eval_times = np.array([])
+        self.skip_metrics = np.array([])
+        self.n_skips = 0
 
     def append_task(self, t: float): 
         self.tasks.append(t)
@@ -178,6 +201,19 @@ class Run(object):
         self.post_slbo_real_eval_means = np.append(self.post_slbo_real_eval_means, mean)
         self.post_slbo_real_eval_stds = np.append(self.post_slbo_real_eval_stds, std)
         self.post_slbo_real_eval_times = np.append(self.post_slbo_real_eval_times, time)
+
+    def append_pre_warmup_real_eval(self, mean: float, std: float, time: int):
+        self.pre_warmup_real_eval_means = np.append(self.pre_warmup_real_eval_means, mean)
+        self.pre_warmup_real_eval_stds = np.append(self.pre_warmup_real_eval_stds, std)
+        self.pre_warmup_real_eval_times = np.append(self.pre_warmup_real_eval_times, time)
+
+    def append_post_warmup_real_eval(self, mean: float, std: float, time: int):
+        self.post_warmup_real_eval_means = np.append(self.post_warmup_real_eval_means, mean)
+        self.post_warmup_real_eval_stds = np.append(self.post_warmup_real_eval_stds, std)
+        self.post_warmup_real_eval_times = np.append(self.post_warmup_real_eval_times, time)
+
+    def append_skip_metric(self, metric):
+        self.skip_metrics = np.append(self.skip_metrics, metric)
 
     def plot_tasks(self):
         plt.stem(self.tasks)
@@ -252,7 +288,12 @@ def from_lines(lines) -> Run:
     for l in lines:
         fmt = l['fmt']
         args = l['args']
-        time = timefrom(l["time"])
+        try:
+            time = timefrom(l["time"])
+        except Exception as e:
+            print(e)
+            print(l)
+            
     
         if "STARTING TASK" in fmt:
             task_num += 1
@@ -274,10 +315,14 @@ def from_lines(lines) -> Run:
             stage = SLBOIter(20, 40, 10)
             slbo.append_stage(stage)
 
-        if args[0] == "pre-warm-up":
+        if len(args) > 0 and args[0] == "pre-warm-up":
             in_warmup = True
-        if args[0] == "post-warm-up":
+            if args[1] == "Real Env":
+                r.append_pre_warmup_real_eval(args[3], args[4], time.timestamp())
+        if len(args) > 0 and args[0] == "post-warm-up":
             in_warmup = False
+            if args[1] == "Real Env":
+                r.append_post_warmup_real_eval(args[3], args[4], time.timestamp())
 
         if "[TRPO]" in fmt:
             n_episodes = args[1]
@@ -292,7 +337,13 @@ def from_lines(lines) -> Run:
             # pull out the model information
             pass
 
-        if "iteration" == args[0]:
+        if "SKIP METRIC" in fmt:
+            r.append_skip_metric(args[0])
+        
+        if "SKIPPING TASK" in fmt:
+            r.n_skips += 1
+
+        if len(args) > 0 and args[0] == "iteration":
             if in_warmup:
                 if args[1] == "Real Env":
                     warm.append_real(args[3], args[4], time.timestamp())
@@ -304,11 +355,14 @@ def from_lines(lines) -> Run:
                 if args[1] == "Virt Env":
                     stage.append_virt(args[3], args[4], time.timestamp())
 
-        if "episode" == args[0]:
+        if len(args) > 0 and args[0] ==  "episode":
             if in_warmup:
                 raise Exception("shouldn't have episode eval in warmup!")
+            else:
+                if args[1] == "Real Env":
+                    slbo.append_episode_real_mean_evals(args[3], args[4], time.timestamp())
 
-        if "post-slbo" == args[0]:
+        if len(args) > 0 and args[0] == "post-slbo":
             if args[1] == "Real Env":
                 r.append_post_slbo_real_eval(args[3], args[4], time.timestamp())
 
