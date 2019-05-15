@@ -75,5 +75,5 @@ def main(exp):
 if __name__ == '__main__':
     for task in vels:
         if task not in tasks:
-            raise Exception("internal error, tasks inconsistent")
+            raise Exception(f"internal error, tasks inconsistent: {task} missing")
     main(sys.argv[1])
