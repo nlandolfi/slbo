@@ -75,6 +75,7 @@ class FLAGS(BaseFLAGS):
         buf_load_index = 0
         base = '/tmp/mbrl/logs'
         warm_up = None
+        off_by_one = False
 
         @classmethod
         def finalize(cls):
