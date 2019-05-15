@@ -44,12 +44,12 @@ tasks = {
     "SSE30": "/tiger/u/lando/jobs/SSE30-eval.sh",
     "RSE30": "/tiger/u/lando/jobs/RSE30-eval.sh",
     "RRD30": "/tiger/u/lando/jobs/RRD30-eval.sh",
-    "DMR30": "/tiger/u/lando/jobs/DMR50-eval.sh",
-    "DMV": "/tiger/u/lando/jobs/DMV50-eval.sh",
-    "SRV": "/tiger/u/lando/jobs/SRV50-eval.sh",
-    "SSE": "/tiger/u/lando/jobs/SSE50-eval.sh",
-    "RSE": "/tiger/u/lando/jobs/RSE50-eval.sh",
-    "RRD": "/tiger/u/lando/jobs/RRD50-eval.sh",
+    "DMR50": "/tiger/u/lando/jobs/DMR50-eval.sh",
+    "DMV50": "/tiger/u/lando/jobs/DMV50-eval.sh",
+    "SRV50": "/tiger/u/lando/jobs/SRV50-eval.sh",
+    "SSE50": "/tiger/u/lando/jobs/SSE50-eval.sh",
+    "RSE50": "/tiger/u/lando/jobs/RSE50-eval.sh",
+    "RRD50": "/tiger/u/lando/jobs/RRD50-eval.sh",
 }
 
 def main(exp):
