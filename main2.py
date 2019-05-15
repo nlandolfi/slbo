@@ -112,7 +112,10 @@ def main():
     if FLAGS.ckpt.buf_load:
         n_samples = 0
         for i in range(FLAGS.ckpt.buf_load_index):
-            data = pickle.load(open(f'{FLAGS.ckpt.buf_load}/stage-{i}.inc-buf.pkl', 'rb'))
+            j = i
+            if FLAGS.ckpt.off_by_one:
+                j += 1
+            data = pickle.load(open(f'{FLAGS.ckpt.buf_load}/stage-{j}.inc-buf.pkl', 'rb'))
             add_multi_step(data, train_set)
             n_samples += len(data)
         logger.warning('Loading %d samples from %s', n_samples, FLAGS.ckpt.buf_load)
