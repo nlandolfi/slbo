@@ -288,7 +288,7 @@ def main():
             elif FLAGS.task.skip_policy == 'shadow-state-error' or FLAGS.task.skip_policy == 'shadow-state-variance':
                 assert FLAGS.warmup.n_shadow_models >= 2
 
-                r0, m1 = shadow_runners[0], shadow_models[1]
+                r0, m1 = runners['train'], shadow_models[1]
                 data, ep_infos = r0.run(policy, FLAGS.rollout.n_test_samples)
                 state_errs = np.linalg.norm(data['next_state'] - m1.eval('next_states', states=data['state'], actions=data['action']), axis=1)
 
