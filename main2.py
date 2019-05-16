@@ -331,7 +331,6 @@ def main():
             else:
                 logger.info("PERFORMING TASK (%s) %d > %d", FLAGS.task.skip_policy, skip_metrics[-1], np.median(skip_metrics[-11:-1]))
         
-        TASK_NUM += 1
         for T in range(FLAGS.slbo.n_stages):
             logger.info('------ Starting Stage %d --------', T)
             evaluate(settings, 'episode')
@@ -421,6 +420,7 @@ def main():
                 np.save(f'{FLAGS.log_dir}/final', saver.state_dict())
             if FLAGS.ckpt.n_save_stages == 1:
                 pickle.dump(recent_train_set, open(f'{FLAGS.log_dir}/stage-{TASK_NUM*FLAGS.slbo.n_stages + T}.inc-buf.pkl', 'wb'))
+        TASK_NUM += 1
 
         evaluate(settings, 'post-slbo')
 
