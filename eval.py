@@ -2,6 +2,7 @@ import math
 import os
 import sys
 import subprocess
+import time
 
 vels = {
     "HCFB": [math.inf, -math.inf, math.inf, math.inf, math.inf, math.inf, math.inf, math.inf, -math.inf, math.inf, math.inf, math.inf, math.inf, -math.inf, -math.inf, -math.inf, -math.inf, -math.inf, math.inf, -math.inf, math.inf, -math.inf, math.inf, math.inf, -math.inf, -math.inf, -math.inf, -math.inf, math.inf, math.inf, math.inf, math.inf, math.inf, math.inf, math.inf, -math.inf, math.inf, -math.inf, -math.inf, math.inf],
@@ -80,9 +81,20 @@ def main(exp):
         else:
             e["VELOCITY"] = f"[{vel}]".replace(" ", "")
 
-        x = subprocess.run(args=["sbatch", tasks[exp], "-o", "/tiger/u/lando/jobs/slurm-%j.out"], env=e, stdout=subprocess.PIPE)
-        job = int(x.stdout[-7:-1])
-        jobs.append(job)
+        prev = {}
+        if os.environ['AZURE'] == "YES":
+            x = subprocess.run(args=["sbatch", tasks[exp], "-o", "/tiger/u/lando/jobs/slurm-%j.out"], env=e, stdout=subprocess.PIPE)
+            job = int(x.stdout[-7:-1])
+            jobs.append(job)
+        else:
+            job = time.time() * 10000000
+            if job in prev:
+                time.sleep(1)
+                job = time.time() * 10000000
+            prev[job] = true
+            e['SLURM_JOBID'] = f"{job}"
+            x = subprocess.run(args=[tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "&"], env=e, stdout=subprocess.PIPE)
+            jobs.append(job)
     print(jobs)
 
 
