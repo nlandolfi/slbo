@@ -96,7 +96,8 @@ def main(exp):
                 job = time.time() * 10000000
             prev[job] = True
             e['SLURM_JOBID'] = f"{job}"
-            x = subprocess.run(args=[tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "2>", "/tiger/u/lando/jobs/slurm-{job}.out" "&"], env=e)
+            cmd = [tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "2>", "/tiger/u/lando/jobs/slurm-{job}.out" "&"]]
+            subprocess.Popen(cmd,shell=False,stdin=None,stdout=None,stderr=None,close_fds=True,creationflags=DETACHED_PROCESS, env=e)
             jobs.append(job)
     print(jobs)
 
