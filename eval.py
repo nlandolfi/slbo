@@ -97,7 +97,7 @@ def main(exp):
             prev[job] = True
             e['SLURM_JOBID'] = f"{job}"
             cmd = [tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "2>", "/tiger/u/lando/jobs/slurm-{job}.out" "&"]
-            subprocess.subprocess.Popen(cmd, env=e)
+            subprocess.Popen(cmd, env=e)
             jobs.append(job)
     print(jobs)
 
