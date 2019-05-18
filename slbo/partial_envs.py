@@ -7,6 +7,8 @@ from slbo.envs.mujoco.ant_env import AntEnv
 from slbo.envs.mujoco.hopper_env import HopperEnv
 from slbo.envs.mujoco.swimmer_env import SwimmerEnv
 from slbo.envs.mujoco.ant_task_env import AntTaskEnv, AntTaskConfig
+from slbo.envs.mujoco.ant_half_friction_task_env import AntHalfFrictionTaskEnv
+from slbo.envs.mujoco.ant_missing_leg_task_env import AntMissingLegTaskEnv
 from slbo.envs.mujoco.ant2d_task_env import Ant2DTaskEnv, Ant2DTaskConfig
 from slbo.envs.mujoco.half_cheetah_task_env import HalfCheetahTaskEnv, HalfCheetahTaskConfig
 from slbo.envs.mujoco.swimmer_task_env import SwimmerTaskEnv, SwimmerTaskConfig
@@ -22,6 +24,8 @@ envs = {
 }
 task_envs = {
     'AntTask-v2': AntTaskEnv,
+    'AntHalfFrictionTask-v2': AntHalfFrictionTaskEnv,
+    'AntMissingLegTask-v2': AntMissingLegTaskEnv,
     'Ant2DTask-v2': Ant2DTaskEnv,
     'HalfCheetahTask-v2': HalfCheetahTaskEnv,
     'SwimmerTask-v2': SwimmerTaskEnv,
@@ -29,6 +33,8 @@ task_envs = {
 }
 task_configs = {
     'AntTask-v2': AntTaskConfig,
+    'AntHalfFrictionTask-v2': AntTaskConfig,
+    'AntMissingLegTask-v2': AntTaskConfig,
     'Ant2DTask-v2': Ant2DTaskConfig,
     'HalfCheetahTask-v2': HalfCheetahTaskConfig,
     'SwimmerTask-v2': SwimmerTaskConfig,
