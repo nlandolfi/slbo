@@ -85,7 +85,7 @@ def main(exp):
             e["VELOCITY"] = f"[{vel}]".replace(" ", "")
 
         prev = {}
-        if os.environ['AZURE'] == "YES":
+        if os.environ['AZURE'] != "YES":
             x = subprocess.run(args=["sbatch", tasks[exp], "-o", "/tiger/u/lando/jobs/slurm-%j.out"], env=e, stdout=subprocess.PIPE)
             job = int(x.stdout[-7:-1])
             jobs.append(job)
