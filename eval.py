@@ -94,7 +94,7 @@ def main(exp):
             if job in prev:
                 time.sleep(1)
                 job = time.time() * 10000000
-            prev[job] = true
+            prev[job] = True
             e['SLURM_JOBID'] = f"{job}"
             x = subprocess.run(args=[tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "&"], env=e, stdout=subprocess.PIPE)
             jobs.append(job)
