@@ -8,7 +8,7 @@ from slbo.envs import BaseModelBasedEnv
 
 AntTaskConfig = ant_task_env.AntTaskConfig
 
-class AntTaskEnv(ant_half_friction_task_env.AntHalfFrictionTaskEnv, BaseModelBasedEnv):
+class AntHalfFrictionTaskEnv(ant_half_friction_task_env.AntHalfFrictionTaskEnv, BaseModelBasedEnv):
     def get_current_obs(self):
         return np.concatenate([
             self.model.data.qpos.flat,  # 15

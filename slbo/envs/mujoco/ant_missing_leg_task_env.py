@@ -8,7 +8,7 @@ from slbo.envs import BaseModelBasedEnv
 
 AntTaskConfig = ant_task_env.AntTaskConfig
 
-class AntTaskEnv(ant_missing_leg_task_env.AntMissingLegTaskEnv, BaseModelBasedEnv):
+class AntMissingLegTaskEnv(ant_missing_leg_task_env.AntMissingLegTaskEnv, BaseModelBasedEnv):
     def get_current_obs(self):
         return np.concatenate([
             self.model.data.qpos.flat,  # 15
