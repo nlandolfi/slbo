@@ -22,6 +22,7 @@ class FLAGS(BaseFLAGS):
         fixed_velocities = []
         reset_policy = True
         skip_policy = 'none' # possibly 'none' or 'drop-mean' or 'shadow-reward-variance' or 'shadow-state-error'
+        skip_window = 4
 
 
     class warmup(BaseFLAGS):
