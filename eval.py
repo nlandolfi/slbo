@@ -120,7 +120,7 @@ def main(exp):
                 job = time.time() * 10000000
             prev[job] = True
             e['SLURM_JOBID'] = f"{job}"
-            cmd = ["./{exp}.sh"tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "2>", "/tiger/u/lando/jobs/slurm-{job}.out" "&"]
+            cmd = ["./{exp}.sh", tasks[exp], ">", f"/tiger/u/lando/jobs/slurm-{job}.out", "2>", "/tiger/u/lando/jobs/slurm-{job}.out" "&"]
             subprocess.Popen(cmd, env=e)
             jobs.append(job)
     print(jobs)
