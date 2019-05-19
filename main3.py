@@ -168,7 +168,7 @@ def main():
             else:
                 logger.info('Task Fixed: %s', task.__str__())
 
-        tasks.append(task.copy())
+        tasks.append(task.goal_velocity)
 
         if FLAGS.task.reset_policy:
             logger.info("Resetting Policy")
