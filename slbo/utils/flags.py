@@ -155,17 +155,18 @@ class FLAGS(BaseFLAGS):
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
 
-        for t in range(60):
-            try:
-                cls.commit = check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
-                check_output(['git', 'add', '.'])
-                check_output(['git', 'checkout-index', '-a', '-f', f'--prefix={log_dir}/src/'])
-                break
-            except CalledProcessError:
-                pass
-            time.sleep(1)
-        else:
-            raise RuntimeError('Failed after 60 trials.')
+        # hack: don't copy code
+        # for t in range(60):
+        #     try:
+        #         cls.commit = check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+        #         check_output(['git', 'add', '.'])
+        #         check_output(['git', 'checkout-index', '-a', '-f', f'--prefix={log_dir}/src/'])
+        #         break
+        #     except CalledProcessError:
+        #         pass
+        #     time.sleep(1)
+        # else:
+        #     raise RuntimeError('Failed after 60 trials.')
 
         yaml.dump(cls.as_dict(), open(os.path.join(log_dir, 'config.yml'), 'w'), default_flow_style=False)
         open(os.path.join(log_dir, 'diff.patch'), 'w').write(
