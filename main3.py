@@ -144,6 +144,7 @@ def main():
     tasks = []
     skip_metrics = []
     TASK_NUM = 0
+    TASKS_WARMED = 0
 
     while TASK_NUM < FLAGS.task.n_iters:
         pidx = TASK_NUM % FLAGS.task.skip_window
@@ -331,6 +332,8 @@ def main():
             else:
                 raise Exception(f"unknown skip policy {FLAGS.task.skip_policy}")
         
+
+        TASKS_WARMED += 1
         # if len(skip_metrics) > 0:
         #     logger.info("SKIP METRIC %.10f", skip_metrics[-1])
 
@@ -341,7 +344,8 @@ def main():
         #     else:
         #         logger.info("PERFORMING TASK (%s) %d > %d", FLAGS.task.skip_policy, skip_metrics[-1], np.median(skip_metrics[-11:-1]))
         
-        if (TASK_NUM+1) % FLAGS.task.skip_window != 0:
+
+        if (TASKS_WARMED+1) % FLAGS.task.skip_window != 0:
             logger.info("NOT YET SELECTION TIME")
             continue
 
