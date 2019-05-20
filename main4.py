@@ -329,7 +329,7 @@ def main():
                 logger.info("episode: %s", np.mean(returns))
 
             if T == 0:  # check
-                samples = train_set[0].sample_multi_step(100, 1, FLAGS.model.multi_step)
+                samples = train_sets[0].sample_multi_step(100, 1, FLAGS.model.multi_step)
                 for i in range(FLAGS.model.multi_step - 1):
                     masks = 1 - (samples.done[i] | samples.timeout[i])[..., np.newaxis]
                     assert np.allclose(samples.state[i + 1] * masks, samples.next_state[i] * masks)
