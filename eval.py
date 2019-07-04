@@ -103,7 +103,7 @@ tasks = {
     "A-flipT": "/tiger/u/lando/jobs/A-flipT-eval.sh",
     "A-fricT": "/tiger/u/lando/jobs/A-fricT-eval.sh",
     "A-legT": "/tiger/u/lando/jobs/A-legT-eval.sh",
-    "HUP": "/tiger/u/lando/jobs/HUP-evals.sh",
+    "HUP": "/tiger/u/lando/jobs/HUP-eval.sh",
     "HUF": "/tiger/u/lando/jobs/HUF-eval.sh",
 }
 
